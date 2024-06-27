@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest
 from collections import defaultdict
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
-from .helpers import login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
+from .helpers import is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
 from .models import Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
 from . import db
 import logging
@@ -278,8 +278,18 @@ def measurements():
                 flash("One or both measurements not found.", "error")
                 return redirect(url_for('main.measurements'))
             
+            # store dates of the 2 records inside variables
+            datetime1 = result_1[-1]
+            datetime2 = result_2[-1]
+            
+            # display the most recent date after the other for comparison purpose
+            if (is_later(datetime1, datetime2)):
+                tmp = result_1
+                result_1 = result_2
+                result_2 = tmp
+
             # calculate the difference in time between the 2 records
-            days_difference = dateDifference(result_1[-1], result_2[-1])
+            days_difference = dateDifference(datetime1, datetime2)
             
             # calculate the difference existing between the 2 records excluding the date
             difference = safeSubtract(result_1[:-1], result_2[:-1])

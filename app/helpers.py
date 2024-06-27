@@ -139,3 +139,11 @@ def dateDifference(date1, date2):
 
     # Return the absolute difference in days
     return abs(difference.days)
+
+# define which date comes after
+def is_later(date1, date2):
+    datetime1 = datetime.strptime(date1, '%Y-%m-%d %H:%M:%S')
+    datetime2 = datetime.strptime(date2, '%Y-%m-%d %H:%M:%S')
+    if(datetime1 > datetime2):
+        return True
+    return False
