@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Plan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Your Diet Plan</h1>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                {% if category == 'added plan successfully' %}
+                <li class="flash-message">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    {% if alternative_dietplans %}
+    <form action="/diet-plan" method="POST">
+        <label for="dietPlan">Select Diet Plan:</label>
+        <select id="dietPlan" name="dietPlan" required>
+            <option value="" disabled selected>Select your diet plan</option>
+            {% for diet_plan in alternative_dietplans %}
+                <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Select</button>
+    </form>
+    {% endif %}
+
+    {% if diet_plan_info %}
+    <h2>{{ diet_plan_info.name }}</h2>
+    <p>{{ diet_plan_info.description }}</p>
+    {% endif %}
+
+    {% if assigned_meals %}
+    <ul>
+        {% for day, meal_type in assigned_meals.items() %}
+            <li>{{ day }}</li>
+            <ul>
+                {% for meal, foods in meal_type.items() %}
+                    <li>{{ meal }}</li>
+                    <ul>
+                    {% for food in foods %}
+                        <li> {{ food[0] }} {{ food[1] }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="{{ url_for('main.add_diet') }}"> Add a new diet plan </a>
+    <br>
+    <a href="{{ url_for('main.index') }}">Back to Home</a>
+</body>
+</html>

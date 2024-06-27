@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Measurements</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Add New Record</h1>
+    <form action="{{ url_for('main.add_measurement') }}" method="POST">
+        {% for column_name in column_names %}
+            <label for="{{ column_name }}"> {{ column_name }}</label> 
+            <input type="number" id="{{ column_name }}" name="{{ column_name }}" step="any"placeholder="Enter value" required>
+            <br>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    
+    <!-- Flash messages display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

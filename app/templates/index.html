@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietShopper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>{{ welcome_message }}</h1>
+    <div class="container">
+        <div class="icon">
+            <a href="{{ url_for('main.shopping_list') }}">
+                <img src="{{ url_for('static', filename='shopping_cart.png') }}" alt="Shopping Cart">
+                <p>You need these products for this week's diet. Let's buy them together!</p>
+            </a>
+        </div>
+        <div class="icon">
+            <a href="{{ url_for('main.diet_plan') }}">
+                <img src="{{ url_for('static', filename='diet_plan.png') }}" alt="Diet Plans">
+                <p>View your personalized diet programs</p>
+            </a>
+        </div>
+        <div class ="icon">
+            <a href="{{ url_for('main.measurements') }}">
+                <img src="{{ url_for('static', filename='measurement.png')}}" alt = "My measurements">
+                <p>Monitor your progress</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

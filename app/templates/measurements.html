@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My measurements</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Your Measurements</h1>
+
+    {% if past_measurements %}
+    <form action="/measurements" method="POST">
+        <label for="selected_measurement">Check your measurement:</label>
+        <select id="selected_measurement" name="selected_measurement" required>
+            <option value="" disabled selected>Select your record</option>
+            {% for measurement in past_measurements %}
+                <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Select</button>
+    </form>
+    {% endif %}
+
+    {% if display_measurement %}
+        <h2>Selected Measurement:</h2>
+        <ul>
+            {% for key, value in display_measurement.items() %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+        <form action="/measurements" method="POST">
+            <input type="hidden" name="selected_measurement_1" value="{{ selected_measurement_id }}">
+            <label for="selected_measurement_2">Compare with another measurement:</label>
+            <select id="selected_measurement_2" name="selected_measurement_2" required>
+                <option value="" disabled selected>Select another record</option>
+                {% for measurement in past_measurements %}
+                    {% if measurement.measurement_id != selected_measurement_id %}
+                        <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button type="submit" name="compare">Compare</button>
+        </form>
+    {% endif %}
+
+    {% if display_measurement_1 and display_measurement_2 %}
+        <h2>Comparison: {{ days_difference }} days</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>First Measurement</th>
+                    <th>Second Measurement</th>
+                    <th>Difference</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value1 in display_measurement_1.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value1 }}</td>
+                        <td>{{ display_measurement_2[key] }}</td>
+                        <td>{{ display_difference[key] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    
+    <br>
+    <a href="{{ url_for('main.add_measurement') }}">Add new record</a>
+    <br>
+    <a href="{{ url_for('main.index') }}">Back to Home</a>
+</body>
+</html>
