@@ -6,7 +6,7 @@ from collections import defaultdict
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
 from .helpers import is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
-from .models import Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
+from .models import Substitutes, Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
 from . import db
 import logging
 
@@ -135,6 +135,47 @@ def shopping_list():
             return render_template("shopping_list.html", items=aggregate_items)
         
         flash("Please select a valid diet plan", "error")
+    return redirect(url_for("main.shopping_list"))
+
+@main.route("/food-details/<string:food_name>", methods=['GET', 'POST'])
+@login_required
+def food_details(food_name):
+    """Allow user to see food details and the substitutes for a specific food"""
+
+    userid = session["user_id"]
+    
+    if request.method == "GET":
+        # Fetch food properties from the Foods table
+        food_properties = Foods.query.filter_by(name=food_name).first()
+        
+        if not food_properties:
+            flash(f"No details found for {food_name}.", "error")
+            return redirect(url_for("main.shopping_list"))
+        
+        # Fetch substitutes from the Substitutes table
+        substitutes_results = Substitutes.query.filter_by(food_id=food_properties.food_id).all()
+
+        # Create an empty list to store all of the details of the equivalent foods
+        substitutes = []
+        
+        if not substitutes_results:
+            flash(f"No substitutes found for {food_name}.", "info")
+            return redirect(url_for("main.shopping_list"))
+
+        # Loop through the list of substitutes' obj and for each one create a food obj
+        for result in substitutes_results:
+            substitute_food = Foods.query.filter_by(food_id=result.substitute_food_id).first()
+            if substitute_food:
+                substitutes.append(substitute_food)
+        
+        return render_template("food_details.html", food=food_properties, substitutes=substitutes)
+    
+    elif request.method == "POST":
+        # Here you can handle any form submissions or other POST request logic if needed
+        # For example, handling a form that adds a new substitute or updates food properties
+        pass  # Placeholder for POST request logic
+
+    # Fallback in case of invalid method
     return redirect(url_for("main.shopping_list"))
 
 

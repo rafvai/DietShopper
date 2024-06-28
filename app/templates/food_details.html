@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Details</title>
+</head>
+<body>
+    <h1>Food Details for {{ food.name }}</h1>
+
+    <h2>Properties:</h2>
+    <ul>
+        <li>Calories: {{ food.calories }} Kcal</li>
+        <li>Carbohydrates: {{ food.carbs }} g</li>
+        <li>Protein: {{ food.protein }} g</li>
+        <li>Fat: {{ food.fats }} g</li>
+    </ul>
+
+    <h2>Substitute Products:</h2>
+    {% if substitutes %}
+        <ul>
+            {% for substitute in substitutes %}
+                <li><strong>{{ substitute.name }}</strong></li>
+                <ul>
+                    <li>Calories: {{ substitute.calories }} Kcal</li>
+                    <li>Carbohydrates: {{ substitute.carbs }} g</li>
+                    <li>Protein: {{ substitute.protein }} g</li>
+                    <li>Fat: {{ substitute.fats }} g</li>
+                </ul>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No substitutes available for this food.</p>
+    {% endif %}
+
+    <a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a>
+</body>
+</html>

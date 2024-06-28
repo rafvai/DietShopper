@@ -31,7 +31,11 @@
     {% if items %}
     <ul>
         {% for name, quantity in items.items() %}
-            <li>{{ name }}: {{ quantity }} gr</li>
+            <li>
+                <form action="{{ url_for('main.food_details', food_name = name) }}">
+                    <button type="submit">{{ name }} </button> : {{ quantity }} gr
+                </form>
+            </li>
         {% endfor %}
     </ul>
     {% endif %}

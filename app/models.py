@@ -71,3 +71,10 @@ class Measurement(db.Model):
     BMR = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=func.now())
 
+class Substitutes(db.Model):
+    __tablename__="Substitutes"
+
+    substitution_id = db.Column(db.Integer, primary_key=True)
+    food_id = db.Column(db.Integer, db.ForeignKey("Foods.food_id"), nullable = True)
+    substitute_food_id = db.Column(db.Integer, db.ForeignKey("Foods.food_id"), nullable = True)
+
