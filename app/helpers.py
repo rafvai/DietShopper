@@ -125,7 +125,7 @@ def safeSubtract(y, z):
         elif(z[x] == None):
             difference.append(y[x])
         else:
-            difference.append(y[x] - z[x])
+            difference.append(round(y[x] - z[x], 2))
     return difference
 
 # Function to calculate the days of difference between two date-time strings
