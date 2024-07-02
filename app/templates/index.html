@@ -5,34 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DietShopper</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .icon {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .icon img {
+            width: 70px;
+            height: 70px;
+            /* Adjust image size as needed */
+        }
+
+        .icon-text {
+            margin-left: 10px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+    </style>
 </head>
 <body>
     <h1>{{ welcome_message }}</h1>
     <div class="container">
         <div class="icon">
             <a href="{{ url_for('main.shopping_list') }}">
-                <img src="{{ url_for('static', filename='shopping_cart.png') }}" alt="Shopping Cart">
-                <p>You need these products for this week's diet. Let's buy them together!</p>
+                <img src="{{ url_for('static', filename='shopping_cart.jpg') }}" alt="Shopping Cart">
             </a>
+            <p class="icon-text">Shopping list</p>
         </div>
+                
         <div class="icon">
             <a href="{{ url_for('main.diet_plan') }}">
                 <img src="{{ url_for('static', filename='diet_plan.png') }}" alt="Diet Plans">
-                <p>View your personalized diet programs</p>
             </a>
+            <p class="icon-text">Diet programs</p>
         </div>
         <div class ="icon">
             <a href="{{ url_for('main.measurements') }}">
-                <img src="{{ url_for('static', filename='measurement.png')}}" alt = "My measurements">
-                <p>Monitor your progress</p>
+                <img src="{{ url_for('static', filename='measurement.png')}}" alt="My measurements">
             </a>
+            <p class="icon-text">Monitor your progress</p>
         </div>
         <div class="icon">
             <a href="{{ url_for('main.my_profile') }}">
-                <img src="{{ url_for('static', filename = 'my_account.png')}}" alt = "My profile">
-                <p>Go to your page profile</p>
+                <img src="{{ url_for('static', filename='my_account.png')}}" alt="My profile">
             </a>
-
+            <p class="icon-text">Go to your page profile</p>
         </div>
     </div>
 </body>
