@@ -3,39 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Shopping List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Your Shopping List</h1>
 
-    {% if message %}
-        <p>{{ message|safe }}</p>
-    {% endif %}
+    <div class="container">
+        {% if message %}
+            <p class="centered-message">{{ message|safe }}</p>
+        {% endif %}
 
-    {% if alternative_dietplans %}
-    <form action="/shopping-list" method="POST">
-        <label for="dietPlan">Select Diet Plan:</label>
-        <select id="dietPlan" name="dietPlan" required>
-            <option value="" disabled selected>Select your diet plan</option>
-            {% for diet_plan in alternative_dietplans %}
-                <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+        {% if alternative_dietplans %}
+        <form action="/shopping-list" method="POST">
+            <label for="dietPlan">Select Diet Plan:</label>
+            <select id="dietPlan" name="dietPlan" required>
+                <option value="" disabled selected>Select your diet plan</option>
+                {% for diet_plan in alternative_dietplans %}
+                    <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Get Shopping List</button>
+        </form>
+        {% endif %}
+
+        {% if items %}
+        <ul class="shopping-list">
+            {% for name, quantity in items.items() %}
+                <li>
+                    <a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a>
+                    <span>{{ quantity }} gr</span>
+                </li>
             {% endfor %}
-        </select>
-        <button type="submit">Get Shopping List</button>
-    </form>
-    {% endif %}
-
-    {% if message1 %}
-        <p>{{ message1|safe }}</p>
-    {% endif %}
-
-    {% if items %}
-    <ul>
-        {% for name, quantity in items.items() %}
-            <li>
-                <a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a> : {{ quantity }} gr
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+        </ul>
+        {% endif %}
+    </div>
 </body>
 </html>

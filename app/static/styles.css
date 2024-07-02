@@ -1,3 +1,5 @@
+/* styles.css */
+
 /* Basic Reset */
 * {
     margin: 0;
@@ -158,7 +160,6 @@ table th {
 ul {
     list-style-type: none;
     padding: 0;
-    margin-bottom: 20px;
 }
 
 ul li {
@@ -174,39 +175,6 @@ ul li a {
 
 ul li a:hover {
     text-decoration: underline;
-}
-
-/* Hierarchical List Styles for Diet Plan */
-ul.diet-plan {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul.diet-plan > li {
-    background-color: #f1f1f1;
-    padding: 10px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-ul.diet-plan ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-ul.diet-plan ul li {
-    background-color: #e7e7e7;
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-}
-
-ul.diet-plan ul ul li {
-    background-color: #dcdcdc;
-    padding: 6px;
-    margin-bottom: 5px;
-    border-radius: 5px;
 }
 
 /* Media Queries */

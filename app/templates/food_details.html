@@ -3,35 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Food Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Food Details for {{ food.name }}</h1>
+    <header>
+        <h1>Food Details for {{ food.name }}</h1>
+    </header>
 
-    <h2>Properties:</h2>
-    <ul>
-        <li>Calories: {{ food.calories }} Kcal</li>
-        <li>Carbohydrates: {{ food.carbs }} g</li>
-        <li>Protein: {{ food.protein }} g</li>
-        <li>Fat: {{ food.fats }} g</li>
-    </ul>
+    <main class="container">
+        <section>
+            <h2>Properties:</h2>
+            <ul class="food-properties">
+                <li><strong>Calories:</strong> {{ food.calories }} Kcal</li>
+                <li><strong>Carbohydrates:</strong> {{ food.carbs }} g</li>
+                <li><strong>Protein:</strong> {{ food.protein }} g</li>
+                <li><strong>Fat:</strong> {{ food.fats }} g</li>
+            </ul>
+        </section>
 
-    <h2>Substitute Products:</h2>
-    {% if substitutes %}
-        <ul>
-            {% for substitute in substitutes %}
-                <li><strong>{{ substitute.name }}</strong></li>
-                <ul>
-                    <li>Calories: {{ substitute.calories }} Kcal</li>
-                    <li>Carbohydrates: {{ substitute.carbs }} g</li>
-                    <li>Protein: {{ substitute.protein }} g</li>
-                    <li>Fat: {{ substitute.fats }} g</li>
+        <section>
+            <h2>Substitute Products:</h2>
+            {% if substitutes %}
+                <ul class="substitute-list">
+                    {% for substitute in substitutes %}
+                        <li>
+                            <strong>{{ substitute.name }}</strong>
+                            <ul class="substitute-details">
+                                <li><strong>Calories:</strong> {{ substitute.calories }} Kcal</li>
+                                <li><strong>Carbohydrates:</strong> {{ substitute.carbs }} g</li>
+                                <li><strong>Protein:</strong> {{ substitute.protein }} g</li>
+                                <li><strong>Fat:</strong> {{ substitute.fats }} g</li>
+                            </ul>
+                        </li>
+                    {% endfor %}
                 </ul>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No substitutes available for this food.</p>
-    {% endif %}
+            {% else %}
+                <p>No substitutes available for this food.</p>
+            {% endif %}
+        </section>
 
-    <a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a>
+        <nav class="back-link">
+            <a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a>
+        </nav>
+    </main>
 </body>
 </html>
