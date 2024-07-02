@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from sqlalchemy import inspect
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -92,22 +93,77 @@ def register():
     
     return render_template("register.html")
 
-@main.route("/my-profile", methods=['GET', 'POST'])
+@main.route("/my-profile", methods=['GET'])
 @login_required
 def my_profile():
-    """ Allow user to manage info in the personal page """
+    """ Allow user to manage info on the personal page """
 
     userid = session["user_id"]
 
-    if request.method == 'GET':
-        # retrieve and display the info submitted by the user
-        current_user = Users.query.filter_by(user_id = userid).first()
-        return render_template("my_profile.html", username = current_user.username, email = current_user.email, created = current_user.created_at)
-    
-    elif request.method == 'POST':
-        pass
+    # Retrieve and display the info submitted by the user
+    current_user = Users.query.filter_by(user_id=userid).first()
 
-    return redirect(url_for("main.my_profile"))
+    if current_user:
+        return render_template("my_profile.html", username=current_user.username, email=current_user.email, created=current_user.created_at)
+    else:
+        flash("User not found", "error")
+        return redirect(url_for('main.index'))
+
+@main.route("/edit-profile", methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    """ Allow user to edit info on their profile """
+    
+    userid = session.get("user_id")
+    field = request.args.get('field')
+    
+    if request.method == "POST":
+        user = Users.query.filter_by(user_id=userid).first()
+
+        if field == "username":
+            new_username = request.form.get("new_username")
+            if new_username:
+                # Check if the new username is already taken
+                existing_user = Users.query.filter_by(username=new_username).first()
+                if existing_user:
+                    flash("Username already in use, please choose another one", "error")
+                else:
+                    try:
+                        user.username = new_username
+                        db.session.commit()
+                        flash("Username updated successfully", "success")
+                    except IntegrityError:
+                        db.session.rollback()
+                        flash("An error occurred while updating username", "error")
+            else:
+                flash("Please enter a new username", "error")
+
+        elif field == "email":
+            new_email = request.form.get("new_email")
+            if new_email:
+                # Check if the new email is already taken
+                existing_email = Users.query.filter_by(email=new_email).first()
+                if existing_email:
+                    flash("Email already in use, please choose another one", "error")
+                else:
+                    try:
+                        user.email = new_email
+                        db.session.commit()
+                        flash("Email updated successfully", "success")
+                    except IntegrityError:
+                        db.session.rollback()
+                        flash("An error occurred while updating email", "error")
+            else:
+                flash("Please enter a new email", "error")
+
+        return redirect(url_for('main.my_profile'))
+    
+    if field not in ["username", "email"]:
+        flash("Invalid field", "error")
+        return redirect(url_for('main.my_profile'))
+
+    return render_template("edit_profile.html", field=field)
+
 
 
 @main.route("/logout")

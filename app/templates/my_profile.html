@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  
 </head>
 <body>
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <div class="container">
         <div class="profile-header">
             <img src="{{ url_for('static', filename='profile_picture.jpg') }}" alt="Profile Picture">
@@ -14,9 +24,11 @@
         <div class="profile-details">
             {% if username %}
                 <h4> Username : {{ username }}</h4>
+                <a href="{{ url_for('main.edit_profile', field='username') }}" class="edit-btn">Edit</a>
             {% endif %}
             {% if email %}
                 <h4> Email : {{ email }}</h4>
+                <a href="{{ url_for('main.edit_profile', field='email') }}" class="edit-btn">Edit</a>
             {% endif %}
             {% if created %}
                 <h4>You're a member of our DietShopper family since: {{ created }}</h4>
