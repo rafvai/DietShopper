@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietShopper - My Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <img src="{{ url_for('static', filename='profile_picture.jpg') }}" alt="Profile Picture">
+        </div>
+        <div class="profile-details">
+            {% if username %}
+                <h4> Username : {{ username }}</h4>
+            {% endif %}
+            {% if email %}
+                <h4> Email : {{ email }}</h4>
+            {% endif %}
+            {% if created %}
+                <h4>You're a member of our DietShopper family since: {{ created }}</h4>
+            {% endif %}
+            
+        </div>
+    </div>
+</body>
+</html>

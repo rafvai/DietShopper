@@ -13,13 +13,15 @@ import logging
 main = Blueprint('main', __name__)
 
 # Define homepage
-@main.route("/")
+@main.route("/", methods=['GET'])
 @login_required
 def index():
     """Show welcome message and options"""
+
     userid = session["user_id"]
     user = Users.query.get(userid)
     welcome_message = f"Welcome back, {user.username}!" if user else "Welcome!"
+
     return render_template("index.html", welcome_message=welcome_message)
 
 
@@ -89,6 +91,23 @@ def register():
         return redirect(url_for("main.index"))
     
     return render_template("register.html")
+
+@main.route("/my-profile", methods=['GET', 'POST'])
+@login_required
+def my_profile():
+    """ Allow user to manage info in the personal page """
+
+    userid = session["user_id"]
+
+    if request.method == 'GET':
+        # retrieve and display the info submitted by the user
+        current_user = Users.query.filter_by(user_id = userid).first()
+        return render_template("my_profile.html", username = current_user.username, email = current_user.email, created = current_user.created_at)
+    
+    elif request.method == 'POST':
+        pass
+
+    return redirect(url_for("main.my_profile"))
 
 
 @main.route("/logout")

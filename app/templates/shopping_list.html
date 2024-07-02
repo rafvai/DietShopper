@@ -32,12 +32,10 @@
     <ul>
         {% for name, quantity in items.items() %}
             <li>
-                <form action="{{ url_for('main.food_details', food_name = name) }}">
-                    <button type="submit">{{ name }} </button> : {{ quantity }} gr
-                </form>
+                <a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a> : {{ quantity }} gr
             </li>
         {% endfor %}
     </ul>
-    {% endif %}
+{% endif %}
 </body>
 </html>
