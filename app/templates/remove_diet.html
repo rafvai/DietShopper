@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Diet Plans</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Remove Diet Plans</h2>
+        
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-warning">
+                    {% for category, message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Check if there are diet plans assigned -->
+        {% if assigned_diets %}
+            <form method="POST" action="{{ url_for('main.remove_diet') }}">
+                <div class="form-group">
+                    <label>Select the diet plans you want to delete:</label>
+                    <ul class="list-group">
+                        <!-- Loop through each assigned diet and create a checkbox -->
+                        {% for diet in assigned_diets %}
+                            <li class="list-group-item">
+                                <input type="checkbox" name="diet_id" value="{{ diet.dietplan_id }}">
+                                {{ diet.name }} - {{ diet.description }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-danger">Delete Selected Diet Plans</button>
+            </form>
+        {% else %}
+            <p class="text-center">You currently have no assigned diet plans.</p>
+        {% endif %}
+        
+        <!-- Link to go back to the diet plan overview -->
+        <div class="text-center mt-3">
+            <a href="{{ url_for('main.diet_plan') }}" class="btn btn-secondary">Back to Diet Plans</a>
+        </div>
+    </div>
+</body>
+</html>
