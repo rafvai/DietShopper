@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <form action="/register" method="post">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Create an username" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="Insert your email address" type="text">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Create a password" type="password">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Verify the password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+    <header>
+        <h1>Register</h1>
+    </header>
+    <main class="container">
+        <form action="/register" method="post" class="register-form">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Create a username" type="text" required>
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" class="form-control" id="email" name="email" placeholder="Insert your email address" type="email" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="password" name="password" placeholder="Create a password" type="password" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="confirmation" name="confirmation" placeholder="Verify the password" type="password" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+        <p class="login-link">
+            <a href="{{ url_for('main.login') }}">Already have an account? Log in here!</a>
+        </p>
+    </main>
 </body>
+</html>
