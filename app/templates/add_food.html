@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Food</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Add Food</h1>
+        <h4>All values must be referred to 100 grams of food</h4>
+
+        <form action="/add-food" method="POST">
+            {% for column in columns %}
+                <div class="form-group">
+                    <label for="{{ column }}">{{ column }}</label>
+                    {% if column == 'Name' %}
+                        <input type="text" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }} (Brand)" required>
+                    {% else %}
+                        <input type="number" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}" required>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

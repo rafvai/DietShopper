@@ -181,10 +181,9 @@ def shopping_list():
 
     if request.method == 'GET':
         # select the dietplans available for that user and store in a variable
-        query = text("SELECT dietplan_id, name FROM DietPlans WHERE user_id = :userid")
-        dietplans = db.session.execute(query, {'userid': userid}).fetchall()
+        dietplans = DietPlans.query.filter_by(user_id = userid).all()
         # if the user hasn't any dietplan assigned
-        if len(dietplans) < 1:
+        if not dietplans:
             # return a message and a link to guide the user to add a diet plan
             message = ("You don't have any diet plan assigned, let's go add a new one!<br>"
                     f'<a href="{url_for("diet_plan")}">Add a Diet Plan</a>')
@@ -196,9 +195,10 @@ def shopping_list():
         # take and store the selected diet plan
         dietPlan = request.form.get('dietPlan')
         if dietPlan:
-            # for that diet plan store all of the food items with their relative quantity 
-            shopping_list_query = text("SELECT Foods.name, Meals.quantity FROM Foods JOIN Meals ON Foods.food_id = Meals.food_id JOIN DietPlans ON DietPlans.dietplan_id = Meals.dietplan_id WHERE DietPlans.user_id = :userid AND DietPlans.dietplan_id = :dietplan")
-            items = db.session.execute(shopping_list_query, {'userid': userid, 'dietplan': dietPlan}).fetchall()
+            # for that diet plan store all of the food items with their relative quantity
+            items = db.session.query(Foods.name, Meals.quantity).join(Meals, Foods.food_id == Meals.food_id).filter(
+                Meals.dietplan_id == dietPlan, DietPlans.user_id == userid).all()
+            
             aggregate_items = {}
             for name, quantity in items:
                 # if the item is already in the shopping list, update the total amount, otherwise add the item and its quantity
@@ -246,12 +246,7 @@ def food_details(food_name):
         return render_template("food_details.html", food=food_properties, substitutes=substitutes)
     
     elif request.method == "POST":
-        # Here you can handle any form submissions or other POST request logic if needed
-        # For example, handling a form that adds a new substitute or updates food properties
-        pass  # Placeholder for POST request logic
-
-    # Fallback in case of invalid method
-    return redirect(url_for("main.shopping_list"))
+        pass
 
 
 @main.route("/diet-plan", methods=['GET', 'POST'])
@@ -399,6 +394,64 @@ def remove_diet():
             flash(f"An error occurred while deleting diet plans: {str(e)}")
 
     return redirect(url_for('main.diet_plan'))
+
+@main.route("/add-food", methods=['GET', 'POST'])
+@login_required
+def add_food():
+    """ Allow user to add food inside db """
+
+    if request.method == 'GET':
+        # Initialize an empty list to store column names
+        columns = []
+        # Use SQLAlchemy's inspector to get column names from the 'foods' table
+        inspector = inspect(db.engine)
+        # Retrieve all column names
+        for column_info in inspector.get_columns("Foods"): 
+            column_name = column_info['name']  # Extract the column name
+            # Skip the primary key column
+            if column_name == "food_id":
+                continue
+            else:
+                columns.append(column_name.capitalize())
+        
+        # Render the template with the column names
+        return render_template("add_food.html", columns=columns)
+
+
+    elif request.method == 'POST':
+        # Retrieve user inputs
+        name = request.form.get("Name")
+        calories = request.form.get("Calories")
+        protein = request.form.get("Protein")
+        carbs = request.form.get("Carbs")
+        fats = request.form.get("Fats")
+
+        # Check all fields are present
+        if not name or not calories or not protein or not carbs or not fats:
+            flash("You must fill all fields.", "error")
+            return redirect(url_for('main.add_food'))
+
+        try:
+            # Convert into column's accepted format
+            calories = int(calories)
+            protein = float(protein)
+            carbs = float(carbs)
+            fats = float(fats)
+        except ValueError:
+            flash("All values must be of a correct format", "error")
+            return redirect(url_for('main.add_food'))
+
+        # Crea una nuova istanza di Foods
+        new_food = Foods(name=name, calories=calories, protein=protein, carbs=carbs, fats=fats)
+
+        # Aggiungi e commit il nuovo record al database
+        db.session.add(new_food)
+        db.session.commit()
+
+        # Flash messaggio di successo
+        flash("The food has been added succesfully!", "food added successfully")
+
+        return redirect(url_for('main.add_food'))  
 
 @main.route("/measurements", methods=['GET', 'POST'])
 @login_required
