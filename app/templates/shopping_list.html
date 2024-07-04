@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shopping List</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Your Shopping List</h1>
+{% extends "base.html" %}
+
+{% block title %}Shopping list{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">SHOPPING LIST</h2>
 
     <div class="container">
         {% if message %}
@@ -37,5 +34,4 @@
         </ul>
         {% endif %}
     </div>
-</body>
-</html>
+{% endblock %}

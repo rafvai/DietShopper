@@ -5,13 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black; 
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 1000px; 
+            width: 120%; 
+            margin: 30px auto;
+            text-align: center;
+        }
+
+
+        .logo {
+            max-width: 250px; /* Adjust the maximum width of the logo */
+            margin-bottom: 20px; /* Add margin below the logo */
+        }
+        
+        .login-form {
+            max-width: 400px; /* Set maximum width of the login form */
+            width: 100%; /* Ensure it takes full width within its container */
+            margin: 0 auto; /* Center align the form within the container */
+            background-color: #ffffff; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left; /* Left align form labels and inputs */
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input {
+            width: calc(100% - 20px); /* Adjusted width to accommodate padding */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn-login {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+        
+        .signup-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .signup-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Login</h1>
-    </header>
-    <main class="container">
+    <div class="container">
+        <header class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        </header>
         <form method="POST" action="{{ url_for('main.login') }}" class="login-form">
+            <header>
+                <h1>Login</h1>
+            </header>
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -28,6 +122,6 @@
         {% if error %}
             <p class="error-message">{{ error }}</p>
         {% endif %}
-    </main>
+    </div>
 </body>
 </html>

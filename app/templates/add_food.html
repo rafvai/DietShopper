@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Food</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add food{% endblock %}
+
+{% block content %}
     <div class="container">
-        <h1>Add Food</h1>
+        <h2 class="text-center">ADD A NEW FOOD ITEM</h2>
         <h4>All values must be referred to 100 grams of food</h4>
 
         <form action="/add-food" method="POST">
@@ -36,5 +32,4 @@
             {% endif %}
         {% endwith %}
     </div>
-</body>
-</html>
+{% endblock %}

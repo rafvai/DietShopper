@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My measurements</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Your Measurements</h1>
+{% extends "base.html" %}
+
+{% block title %}My measurements{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">MY MEASUREMENTS</h2>
 
     {% if past_measurements %}
     <form action="/measurements" method="POST">
@@ -76,5 +72,4 @@
     <a href="{{ url_for('main.add_measurement') }}">Add new record</a>
     <br>
     <a href="{{ url_for('main.index') }}">Back to Home</a>
-</body>
-</html>
+{% endblock %}

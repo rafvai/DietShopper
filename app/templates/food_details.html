@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Food Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}{{ food.name }} details {% endblock %}
+
+{% block content %}
     <header>
         <h1>Food Details for {{ food.name }}</h1>
     </header>
@@ -47,5 +44,4 @@
             <a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a>
         </nav>
     </main>
-</body>
-</html>
+{% endblock %}

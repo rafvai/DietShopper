@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Untitled Page{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="170" height="50">
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="nav-links">
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li><a href="{{ url_for('main.diet_plan') }}">Diet Plans</a></li>
+                <li><a href="{{ url_for('main.measurements') }}">Measurements</a></li>
+            </ul>
+        </nav>
+
+        <!-- Content Block -->
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

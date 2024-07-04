@@ -5,13 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black; 
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0);
+            max-width: 1000px; 
+            width: 100%; 
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 250px; /* Adjust the maximum width of the logo */
+            margin-bottom: 20px; /* Add margin below the logo */
+        }
+        
+        .register-form {
+            max-width: 400px; /* Set maximum width of the registration form */
+            width: 100%; /* Ensure it takes full width within its container */
+            margin: 0 auto; /* Center align the form within the container */
+            background-color: #ffffff; /* Background color for the registration form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left; /* Left align form labels and inputs */
+        }
+        
+        .form-group input {
+            width: calc(100% - 20px); /* Adjusted width to accommodate padding */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn-register {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .btn-register:hover {
+            background-color: #0056b3;
+        }
+        
+        .login-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Register</h1>
-    </header>
-    <main class="container">
+    <div class="container">
+        <header class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        </header>
         <form action="/register" method="post" class="register-form">
+            <header>
+                <h1>Register</h1>
+            </header>
             <div class="form-group">
                 <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Create a username" type="text" required>
             </div>
@@ -24,11 +106,11 @@
             <div class="form-group">
                 <input class="form-control" id="confirmation" name="confirmation" placeholder="Verify the password" type="password" required>
             </div>
-            <button class="btn btn-primary" type="submit">Register</button>
+            <button class="btn-register" type="submit">Register</button>
         </form>
         <p class="login-link">
             <a href="{{ url_for('main.login') }}">Already have an account? Log in here!</a>
         </p>
-    </main>
+    </div>
 </body>
 </html>
