@@ -74,12 +74,11 @@
     {% endif %}
 
     <div class="links">
-        <a href="{{ url_for('main.add_diet') }}">Add a new diet plan</a>
-        <br>
-        <a href="{{ url_for('main.add_food') }}">Add a new food</a>
-        <br>
-        <a href="{{ url_for('main.remove_diet') }}">Remove diet plan</a>
-        <br>
-        <a href="{{ url_for('main.index') }}">Back to Home</a>
+        <ul>
+            <li><a href="{{ url_for('main.add_diet') }}">Add a new diet plan</a></li>
+            <li><a href="{{ url_for('main.add_food') }}">Add a new food</a></li>
+            <li><a href="{{ url_for('main.remove_diet') }}">Remove diet plan</a></li>
+            <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
+        </ul>        
     </div>
 {% endblock %}

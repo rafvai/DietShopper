@@ -68,8 +68,10 @@
         <p>{{ message }}</p>
     {% endif %}
     
-    <br>
-    <a href="{{ url_for('main.add_measurement') }}">Add new record</a>
-    <br>
-    <a href="{{ url_for('main.index') }}">Back to Home</a>
+    <div class="links">
+        <ul>
+            <li> <a href="{{ url_for('main.add_measurement') }}">Add new record</a></li>
+            <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
+        </ul>
+    </div>
 {% endblock %}

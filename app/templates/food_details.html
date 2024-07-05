@@ -39,9 +39,11 @@
                 <p>No substitutes available for this food.</p>
             {% endif %}
         </section>
-
-        <nav class="back-link">
-            <a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a>
-        </nav>
     </main>
+
+    <div class="links">
+        <ul>
+            <li><a href="{{ url_for('main.shopping_list') }}">Back to Shopping List</a></li>
+        </ul>
+    </div> 
 {% endblock %}
