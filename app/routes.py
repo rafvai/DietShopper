@@ -479,10 +479,10 @@ def measurements():
             if not selected_measurement_id_1 or not selected_measurement_id_2:
                 flash("Both measurements must be selected for comparison.", "error")
                 return redirect(url_for('main.measurements'))
-
+            # retrieve all fields for the selected measurement, except for measurement id and user id
             query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
                         FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
-
+ 
             result_1 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_1}).fetchone()
             result_2 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_2}).fetchone()
 
@@ -504,7 +504,7 @@ def measurements():
             days_difference = dateDifference(datetime1, datetime2)
             
             # calculate the difference existing between the 2 records excluding the date
-            difference = safeSubtract(result_1[:-1], result_2[:-1])
+            difference = safeSubtract(result_2[:-1], result_1[:-1])
             
             # store the formatted column names , don't save user, measurement and date
             column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]

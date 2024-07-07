@@ -5,74 +5,72 @@
 {% block content %}
     <h2 class="text-center">YOUR DIET PLAN</h2>
 
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <div class="container">
-        <!-- Display Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash-message {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
+        {% if alternative_dietplans %}
+        <form action="/diet-plan" method="POST">
+            <label for="dietPlan">Select Diet Plan:</label>
+            <select id="dietPlan" name="dietPlan" required>
+                <option value="" disabled selected>Select your diet plan</option>
+                {% for diet_plan in alternative_dietplans %}
+                    <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Select</button>
+        </form>
+        {% endif %}
 
-    {% if alternative_dietplans %}
-    <form action="/diet-plan" method="POST">
-        <label for="dietPlan">Select Diet Plan:</label>
-        <select id="dietPlan" name="dietPlan" required>
-            <option value="" disabled selected>Select your diet plan</option>
-            {% for diet_plan in alternative_dietplans %}
-                <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Select</button>
-    </form>
-    {% endif %}
+        {% if diet_plan_info %}
+        <h2>Diet plan name: {{ diet_plan_info.name }}</h2>
+        <p>Diet plan description: {{ diet_plan_info.description }}</p>
+        {% endif %}
 
-    {% if diet_plan_info %}
-    <h2>Diet plan name: {{ diet_plan_info.name }}</h2>
-    <p>Diet plan description: {{ diet_plan_info.description }}</p>
-    {% endif %}
-
-    {% if assigned_meals %}
-    <table class="diet-table">
-        <thead>
-            <tr>
-                <th>Day</th>
-                <th>Meal Type</th>
-                <th>Food Item</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for day, meal_type in assigned_meals.items() %}
-                {% set meal_count = meal_type|length %}
-                {% for meal, foods in meal_type.items() %}
-                    <tr>
-                        {% if loop.first %}
-                            <td rowspan="{{ meal_count }}">{{ day }}</td>
-                        {% endif %}
-                        <td>{{ meal }}</td>
-                        <td>{{ foods[0][0] }}</td>
-                        <td>{{ foods[0][1] }}</td>
-                    </tr>
-
-                    {% for food in foods[1:] %}
+        {% if assigned_meals %}
+        <table class="diet-table">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Meal Type</th>
+                    <th>Food Item</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, meal_type in assigned_meals.items() %}
+                    {% set meal_count = meal_type|length %}
+                    {% for meal, foods in meal_type.items() %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td>{{ food[0] }}</td>
-                            <td>{{ food[1] }}</td>
+                            {% if loop.first %}
+                                <td rowspan="{{ meal_count }}">{{ day }}</td>
+                            {% endif %}
+                            <td>{{ meal }}</td>
+                            <td>{{ foods[0][0] }}</td>
+                            <td>{{ foods[0][1] }}</td>
                         </tr>
+
+                        {% for food in foods[1:] %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>{{ food[0] }}</td>
+                                <td>{{ food[1] }}</td>
+                            </tr>
+                        {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
     <div class="links">
         <ul>
             <li><a href="{{ url_for('main.add_diet') }}">Add a new diet plan</a></li>
