@@ -25,13 +25,32 @@
 
         {% if items %}
         <ul class="shopping-list">
-            {% for name, quantity in items.items() %}
-                <li>
-                    <a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a>
-                    <span>{{ quantity }} gr</span>
-                </li>
-            {% endfor %}
-        </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, quantity in items.items() %}
+                    <tr>
+                        <td><a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a> </td>
+                        <td>{{ quantity }} gr</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 {% endblock %}

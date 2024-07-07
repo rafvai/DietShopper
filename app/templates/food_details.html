@@ -8,15 +8,17 @@
     </header>
 
     <main class="container">
-        <section>
-            <h2>Properties:</h2>
-            <ul class="food-properties">
-                <li><strong>Calories:</strong> {{ food.calories }} Kcal</li>
-                <li><strong>Carbohydrates:</strong> {{ food.carbs }} g</li>
-                <li><strong>Protein:</strong> {{ food.protein }} g</li>
-                <li><strong>Fat:</strong> {{ food.fats }} g</li>
-            </ul>
-        </section>
+        {% if food %}
+            <section>
+                <h2> {{ food.name }} properties:</h2>
+                <ul class="food-properties">
+                    <li><strong>Calories:</strong> {{ food.calories }} Kcal</li>
+                    <li><strong>Carbohydrates:</strong> {{ food.carbs }} g</li>
+                    <li><strong>Protein:</strong> {{ food.protein }} g</li>
+                    <li><strong>Fat:</strong> {{ food.fats }} g</li>
+                </ul>
+            </section>
+        {% endif %}
 
         <section>
             <h2>Substitute Products:</h2>
@@ -35,11 +37,19 @@
                         </li>
                     {% endfor %}
                 </ul>
-            {% else %}
-                <p>No substitutes available for this food.</p>
             {% endif %}
         </section>
     </main>
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
     <div class="links">
         <ul>

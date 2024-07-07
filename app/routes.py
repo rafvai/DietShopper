@@ -235,8 +235,8 @@ def food_details(food_name):
         
         if not substitutes_results:
             flash(f"No substitutes found for {food_name}.", "info")
-            return redirect(url_for("main.shopping_list"))
-
+            return render_template("food_details.html", food=food_properties)
+        
         # Loop through the list of substitutes' obj and for each one create a food obj
         for result in substitutes_results:
             substitute_food = Foods.query.filter_by(food_id=result.substitute_food_id).first()
