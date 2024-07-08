@@ -31,7 +31,7 @@
 
         {% if diet_plan_info %}
         <h2>Diet plan name: {{ diet_plan_info.name }}</h2>
-        <p>Diet plan description: {{ diet_plan_info.description }}</p>
+        <h4>Diet plan description: {{ diet_plan_info.description }}</h4>
         {% endif %}
 
         {% if assigned_meals %}
@@ -41,7 +41,7 @@
                     <th>Day</th>
                     <th>Meal Type</th>
                     <th>Food Item</th>
-                    <th>Quantity</th>
+                    <th>Quantity (gr)</th>
                 </tr>
             </thead>
             <tbody>

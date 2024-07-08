@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Shopping list{% endblock %}
+{% block title %}Shopping List{% endblock %}
 
 {% block content %}
     <h2 class="text-center">SHOPPING LIST</h2>
@@ -11,21 +11,20 @@
         {% endif %}
 
         {% if alternative_dietplans %}
-        <form action="/shopping-list" method="POST">
-            <label for="dietPlan">Select Diet Plan:</label>
-            <select id="dietPlan" name="dietPlan" required>
-                <option value="" disabled selected>Select your diet plan</option>
-                {% for diet_plan in alternative_dietplans %}
-                    <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Get Shopping List</button>
-        </form>
+            <form id="dietPlanForm" method="GET" onsubmit="return redirectToDietPlan()">
+                <label for="dietPlan">Select Diet Plan:</label>
+                <select id="dietPlan" name="dietPlan" required>
+                    <option value="" disabled selected>Select your diet plan</option>
+                    {% for diet_plan in alternative_dietplans %}
+                        <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Get Shopping List</button>
+            </form>
         {% endif %}
 
         {% if items %}
-        <ul class="shopping-list">
-            <table>
+            <table class="shopping-list">
                 <thead>
                     <tr>
                         <th>Food</th>
@@ -34,14 +33,15 @@
                 </thead>
                 <tbody>
                     {% for name, quantity in items.items() %}
-                    <tr>
-                        <td><a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a> </td>
-                        <td>{{ quantity }} gr</td>
-                    </tr>
+                        <tr>
+                            <td><a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a></td>
+                            <td>{{ quantity }} gr</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% endif %}
+
         <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -53,4 +53,17 @@
             {% endif %}
         {% endwith %}
     </div>
+
+    <script>
+        function redirectToDietPlan() {
+            var form = document.getElementById("dietPlanForm");
+            var select = document.getElementById("dietPlan");
+            var selectedDietPlanId = select.options[select.selectedIndex].value;
+            if (selectedDietPlanId) {
+                window.location.href = "/shopping-list/" + selectedDietPlanId;
+                return false; // Prevent form submission
+            }
+            return true;
+        }
+    </script>
 {% endblock %}

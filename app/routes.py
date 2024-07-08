@@ -173,44 +173,39 @@ def logout():
     return redirect(url_for("main.login"))
 
 
-@main.route("/shopping-list", methods=['GET', 'POST'])
+@main.route("/shopping-list", methods=['GET'])
 @login_required
 def shopping_list():
     """Show the shopping list for the user"""
     userid = session["user_id"]
 
-    if request.method == 'GET':
-        # select the dietplans available for that user and store in a variable
-        dietplans = DietPlans.query.filter_by(user_id = userid).all()
-        # if the user hasn't any dietplan assigned
-        if not dietplans:
-            # return a message and a link to guide the user to add a diet plan
-            message = ("You don't have any diet plan assigned, let's go add a new one!<br>"
-                    f'<a href="{url_for("diet_plan")}">Add a Diet Plan</a>')
-            return render_template("shopping_list.html", message = message)
-        # send dietplans options to frontend
-        return render_template("shopping_list.html", message = "Choose your diet plan", alternative_dietplans=dietplans)
+    # Select the diet plans available for that user
+    dietplans = DietPlans.query.filter_by(user_id=userid).all()
+    if not dietplans:
+        # Return a message and a link to guide the user to add a diet plan
+        message = ("You don't have any diet plan assigned, let's go add a new one!<br>"
+                   f'<a href="{url_for("main.add_diet")}">Add a Diet Plan</a>')
+        return render_template("shopping_list.html", message=message)
+    # Send diet plan options to frontend
+    return render_template("shopping_list.html", message="Choose your diet plan", alternative_dietplans=dietplans)
+
     
-    else:
-        # take and store the selected diet plan
-        dietPlan = request.form.get('dietPlan')
-        if dietPlan:
-            # for that diet plan store all of the food items with their relative quantity
-            items = db.session.query(Foods.name, Meals.quantity).join(Meals, Foods.food_id == Meals.food_id).filter(
-                Meals.dietplan_id == dietPlan, DietPlans.user_id == userid).all()
-            
-            aggregate_items = {}
-            for name, quantity in items:
-                # if the item is already in the shopping list, update the total amount, otherwise add the item and its quantity
-                aggregate_items[name] = aggregate_items.get(name, 0) + quantity
-            # if the shopping list is empty
-            if not aggregate_items:
-                return render_template ("shopping_list.html" , message1 = "You don't have any food in the selected diet plan")
-            
-            return render_template("shopping_list.html", items=aggregate_items)
-        
-        flash("Please select a valid diet plan", "error")
-    return redirect(url_for("main.shopping_list"))
+@main.route("/shopping-list/<int:diet_plan_id>", methods=['GET'])
+@login_required
+def show_selected_shopping_list(diet_plan_id):
+    """Show the shopping list for the selected diet plan"""
+    # retrieve food and quantity for the selected diet plan
+    items = db.session.query(Foods.name, Meals.quantity).join(Meals, Foods.food_id == Meals.food_id).filter(
+        Meals.dietplan_id == diet_plan_id).all()
+    # store them in a dict 
+    aggregate_items = {}
+    for name, quantity in items:
+        aggregate_items[name] = aggregate_items.get(name, 0) + quantity
+    if not aggregate_items:
+        flash ("You don't have any food in the selected diet plan", "error availability dietplans")
+        return render_template("shopping_list.html")
+    return render_template("shopping_list.html", items=aggregate_items)
+
 
 @main.route("/food-details/<string:food_name>", methods=['GET', 'POST'])
 @login_required
@@ -245,6 +240,7 @@ def food_details(food_name):
         
         return render_template("food_details.html", food=food_properties, substitutes=substitutes)
     
+    ######## to do
     elif request.method == "POST":
         pass
 
