@@ -1,5 +1,7 @@
 from datetime import datetime
 from flask import request, redirect, url_for, session
+import matplotlib.pyplot as plt
+
 
 def convert_quantity_to_grams(quantity_str):
     """Convert quantity string (e.g., '100gr') to integer grams."""
@@ -40,7 +42,8 @@ def collect_meal_data(form_data, dietplan_id):
     days = DayTypes.query.all()
     meals = MealTypes.query.all()
 
-    # Insert meals and foods into Meals table     
+    # Insert meals and foods into Meals table   
+    # loop through each day and each meal  
     for day in days:
         day_id = day.day_type_id
         for meal in meals:
@@ -49,10 +52,10 @@ def collect_meal_data(form_data, dietplan_id):
             foods_ids = form_data.getlist(f"food-{day_id}-{meal_id}[]")
             quantities = form_data.getlist(f"quantity-{day_id}-{meal_id}[]")
             
-
+            # if there is a mismatch between the number of foods and quantities
             if len(foods_ids) != len(quantities):
                 raise BadRequest("Mismatch between number of foods and quantities.")
-
+            # join food id with the relative quantity
             for food_id, quantity in zip(foods_ids, quantities):
                 if not quantity.isdigit() or int(quantity) <= 0:
                     raise BadRequest("Quantity must be a positive integer.")
@@ -147,3 +150,26 @@ def is_later(date1, date2):
     if(datetime1 > datetime2):
         return True
     return False
+
+def create_food_pie_chart(food):
+    from app.models import Foods
+    from sqlalchemy import inspect
+    import plotly.graph_objs as go
+    from . import db
+
+    # create an inspector obj to retrieve column names
+    inspector = inspect(db.engine)
+    # create arrays to store the values needed for the chart
+    macro_nutrients = []
+    values = []
+    for column_info in inspector.get_columns("Foods"):
+        column_name = column_info['name']
+        if column_name in ["food_id", "name", "calories"]:
+            continue
+        else:
+            macro_nutrients.append(column_name.capitalize())
+            values.append(getattr(food, column_name))
+    
+    # Generate Plotly pie chart
+    fig = go.Figure(data=[go.Pie(labels=macro_nutrients, values=values)])
+    return fig

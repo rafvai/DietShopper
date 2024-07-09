@@ -10,7 +10,7 @@
     <main class="container">
         {% if food %}
             <section>
-                <h2> {{ food.name }} properties:</h2>
+                <h2>{{ food.name }} properties:</h2>
                 <ul class="food-properties">
                     <li><strong>Calories:</strong> {{ food.calories }} Kcal</li>
                     <li><strong>Carbohydrates:</strong> {{ food.carbs }} g</li>
@@ -20,6 +20,12 @@
             </section>
         {% endif %}
 
+        {% if chart %}
+            <div class="food-chart">
+                {{ chart|safe }}
+            </div>
+        {% endif %}
+        
         <section>
             <h2>Substitute Products:</h2>
             <br>

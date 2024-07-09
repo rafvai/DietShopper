@@ -1,15 +1,18 @@
 from sqlite3 import IntegrityError
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from markupsafe import Markup
 from sqlalchemy import inspect
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.exceptions import BadRequest
 from collections import defaultdict
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
-from .helpers import is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
+from .helpers import create_food_pie_chart, is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
 from .models import Substitutes, Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
 from . import db
 import logging
+import plotly.io as pio
+
 
 main = Blueprint('main', __name__)
 
@@ -222,6 +225,10 @@ def food_details(food_name):
             flash(f"No details found for {food_name}.", "error")
             return redirect(url_for("main.shopping_list"))
         
+        # show chart of nutrients
+        fig = create_food_pie_chart(food_properties)
+        chart = pio.to_html(fig, full_html = False)
+        
         # Fetch substitutes from the Substitutes table
         substitutes_results = Substitutes.query.filter_by(food_id=food_properties.food_id).all()
 
@@ -230,7 +237,7 @@ def food_details(food_name):
         
         if not substitutes_results:
             flash(f"No substitutes found for {food_name}.", "info")
-            return render_template("food_details.html", food=food_properties)
+            return render_template("food_details.html", food=food_properties, chart = Markup(chart))
         
         # Loop through the list of substitutes' obj and for each one create a food obj
         for result in substitutes_results:
@@ -238,7 +245,7 @@ def food_details(food_name):
             if substitute_food:
                 substitutes.append(substitute_food)
         
-        return render_template("food_details.html", food=food_properties, substitutes=substitutes)
+        return render_template("food_details.html", food=food_properties, substitutes=substitutes, chart= Markup(chart))
     
     ######## to do
     elif request.method == "POST":
@@ -263,16 +270,14 @@ def diet_plan():
         dietPlan_id = request.form.get('dietPlan')
         if dietPlan_id: 
             diet_plan_info = DietPlans.query.filter_by(user_id = userid, dietplan_id = dietPlan_id).first()
-            assigned_meals_query = text("""
-            SELECT DayTypes.day_name, MealTypes.meal_name, Foods.name, Meals.quantity
-            FROM Meals 
-            JOIN DayTypes ON Meals.day_type_id = DayTypes.day_type_id
-            JOIN MealTypes ON Meals.meal_type_id = MealTypes.meal_type_id
-            JOIN Foods ON Meals.food_id = Foods.food_id
-            WHERE Meals.dietplan_id = :diet_plan_id
-            """) 
+            
             # store the list of all meals for that dietplan
-            result = db.session.execute(assigned_meals_query, {'diet_plan_id' : dietPlan_id}).fetchall()
+            result = (db.session.query(DayTypes.day_name, MealTypes.meal_name, Foods.name, Meals.quantity)
+            .join(Meals, Meals.day_type_id == DayTypes.day_type_id)
+            .join(MealTypes, MealTypes.meal_type_id == Meals.meal_type_id)
+            .join(Foods, Foods.food_id == Meals.food_id)
+            .filter(Meals.dietplan_id == dietPlan_id)
+            .all())
             
             # create a default dict in which for every day and meal there's the corresponding food and quantity
             output = defaultdict(lambda: defaultdict(list))
