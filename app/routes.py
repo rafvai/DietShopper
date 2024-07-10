@@ -62,24 +62,25 @@ def login():
 @main.route("/register", methods=["GET", "POST"])
 def register():
     """Allow new user to register"""
+    # retrieve user inputs
     if request.method == 'POST':
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
-
+        # if some fields are missing return error
         if not username or not password or not confirmation or not email:
             flash("Must fill out all fields", "error")
             return render_template("register.html")
-
+        # if password is not the same as confirmation
         if password != confirmation:
             flash("Passwords don't match", "error")
             return render_template("register.html")
-
+        # if the username is already in use
         if Users.query.filter_by(username=username).first():
             flash("Username already in use", "error")
             return render_template("register.html")
-        
+        # if email is already in use 
         if Users.query.filter_by(email=email).first():
             flash("Email address already in use", "error")
             return render_template("register.html")
@@ -91,7 +92,6 @@ def register():
         db.session.commit()
 
         session["user_id"] = new_user.user_id
-        print(session["user_id"])
         return redirect(url_for("main.index"))
     
     return render_template("register.html")

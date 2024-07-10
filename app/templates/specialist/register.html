@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialist register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        </header>
+        <form action="{{ url_for('specialist.specialist_register') }}" method="post" class="register-form">
+            <header>
+                <h1>Register</h1>
+            </header>
+            {% if column_names %}
+                <div class="form-group">
+                    {% for column_name in column_names %}
+                        <input autocomplete="off" autofocus class="form-control" id="{{ column_name }}" name="{{ column_name }}" placeholder="{{ column_name }}" type="text" required>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <button class="btn-register" type="submit">Register</button>
+        </form>
+        <p class="login-link">
+            <a href="{{ url_for('specialist.specialist_login') }}">Already have an account? Log in here!</a>
+        </p>
+    </div>
+</body>
+</html>
