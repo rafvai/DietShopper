@@ -338,6 +338,9 @@ def add_diet():
         # create a dict to store meals for every day
         formatted_meal_data = collect_meal_data(request.form, new_diet_plan.dietplan_id)
 
+        if not formatted_meal_data:
+            flash("An error occurred while collecting data", "error collecting data")
+
         insert_meals_and_foods(formatted_meal_data)
 
         db.session.commit()

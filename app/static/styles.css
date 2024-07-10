@@ -170,6 +170,24 @@ form button {
     cursor: pointer;
 }
 
+.icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.icon img {
+    width: 70px;
+    height: 70px;
+    /* Adjust image size as needed */
+}
+
+.icon-text {
+    margin-left: 10px;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
 .profile-details {
     margin-top: 20px;
     margin-bottom: 20px;

@@ -1,15 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Raf/Desktop/DietShopper/ultimate.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="browser pragmas structure query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="150"/><column_width id="3" width="4903"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,5:mainFoods"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="DayTypes" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="148"/><column index="2" value="127"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Foods" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="1" mode="0"/></sort><column_widths><column index="1" value="98"/><column index="2" value="300"/><column index="3" value="99"/><column index="4" value="94"/><column index="5" value="76"/><column index="6" value="61"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Substitutes" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="173"/><column index="2" value="98"/><column index="3" value="212"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- Inserisci tipi di cereali con diverse marche nella tabella Foods
-INSERT INTO Foods (name, calories, protein, carbs, fats)
-VALUES
-    ('Fiocchi di Avena (Quaker)', 375, 13, 60, 7),
-    ('Crusca di Frumento (Kellogg''s)', 330, 12, 67, 2),
-    ('Corn Flakes (Kellogg''s)', 370, 7, 84, 0.9),
-    ('Riso Soffiato (Nestlé)', 380, 7, 85, 1),
-    ('Muesli (Kellogg''s)', 380, 10, 70, 7),
-    ('Granola (Alce Nero)', 450, 9, 58, 21),
-    ('Crunchy (Nestlé)', 400, 7, 76, 9),
-    ('Cereali Multicereali (Kellogg''s)', 360, 8, 82, 1),
-    ('Crispies (Nestlé)', 350, 6, 80, 0.5),
-    ('Fibrextra (Kellogg''s)', 320, 16, 60, 2);
-
-	</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Raf/Desktop/DietShopper/ultimate.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="browser pragmas structure query" current="2"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="150"/><column_width id="3" width="4903"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="7" parent="0"/><expanded_item id="9" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,8:mainDayTypes"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="DayTypes" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="148"/><column index="2" value="127"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE &quot;Specialists&quot; (
+	&quot;specialist_id&quot;	INTEGER,
+	&quot;username&quot;	TEXT NOT NULL UNIQUE,
+	&quot;name&quot;	TEXT NOT NULL,
+	&quot;last_name&quot;	TEXT NOT NULL,
+	&quot;email&quot;	TEXT NOT NULL UNIQUE,
+	&quot;password&quot;	TEXT NOT NULL,
+	&quot;created_at&quot;	DATETIME DEFAULT 'NOW()',
+	&quot;approved&quot;	BOOLEAN DEFAULT 'False',
+	PRIMARY KEY(&quot;specialist_id&quot;)
+);</sql><current_tab id="0"/></tab_sql></sqlb_project>

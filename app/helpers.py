@@ -51,6 +51,7 @@ def collect_meal_data(form_data, dietplan_id):
             # get from the user inputs the list of foods with relative quantity for a specified day and a specified meal
             foods_ids = form_data.getlist(f"food-{day_id}-{meal_id}[]")
             quantities = form_data.getlist(f"quantity-{day_id}-{meal_id}[]")
+
             
             # if there is a mismatch between the number of foods and quantities
             if len(foods_ids) != len(quantities):

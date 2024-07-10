@@ -102,3 +102,9 @@ def specialist_register():
         return redirect(url_for("specialist.specialist_index"))
 
     return render_template("specialist/register.html", column_names=column_names)
+
+@specialist_bp.route("/index", methods=['GET'])
+def specialist_index():
+    """ Show specialist home page """
+
+    return render_template("specialist/index.html")
