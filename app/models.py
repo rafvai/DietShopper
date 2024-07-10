@@ -83,9 +83,12 @@ class Specialists(db.Model):
 
     specialist_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
+    approved = db.Column(db.Boolean, default=False)
 
 class Patients(db.Model):
     __tablename__="Patients"

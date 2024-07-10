@@ -11,20 +11,7 @@ specialist_bp = Blueprint('specialist',__name__,url_prefix='/specialist')
 def specialist_login():
     """ Allow specialists to log in """
     
-    if request.method == 'GET':
-        # create an inspector obj to retrieve column names
-        inspector = inspect(db.engine)
-        fields = []
-
-        for column_info in inspector.get_columns('Specialists'):
-            column_name = column_info['name']
-            # skip columns with an automatic assigned value
-            if column_name not in ["specialist_id", "created_at"]:
-                fields.append(column_name.capitalize())
-    
-        return render_template("specialist/login.html", column_names = fields)
-    
-    elif request.method == 'POST':
+    if request.method == 'POST':
         username = request.form.get("Username")
         password = request.form.get("Password")
 
@@ -51,6 +38,8 @@ def specialist_login():
         return redirect(url_for("specialist.specialist_index"))
     
     return render_template("specialist/login.html")
+
+@specialist_bp.route("/register", methods = ['GET','POST'])
 
 
     
