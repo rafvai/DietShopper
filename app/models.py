@@ -78,3 +78,20 @@ class Substitutes(db.Model):
     food_id = db.Column(db.Integer, db.ForeignKey("Foods.food_id"), nullable = True)
     substitute_food_id = db.Column(db.Integer, db.ForeignKey("Foods.food_id"), nullable = True)
 
+class Specialists(db.Model):
+    __tablename__="Specialists"
+
+    specialist_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    created_at = db.Column(db.DateTime, default=func.now())
+
+class Patients(db.Model):
+    __tablename__="Patients"
+
+    patient_id = db.Column(db.Integer, primary_key=True)
+    specialist_id = db.Column(db.Integer, db.ForeignKey("Specialists.specialist_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("Users.user_id"), nullable=False)
+    created_at = db.Column(db.DateTime, default=func.now())
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Specialist Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="POST" action="{{ url_for('specialist.specialist_login') }}">
+        {% for field in column_names %}
+            <label for="{{ field }}">{{ field }}:</label>
+            <input type="text" id="{{ field }}" name="{{ field }}" required>
+            <br>
+        {% endfor %}
+        <label for="Password">Password:</label>
+        <input type="password" id="Password" name="Password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

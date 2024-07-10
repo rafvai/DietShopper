@@ -23,4 +23,8 @@ def create_app():
     from .routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
+    # import and register specialist blueprint
+    from.specialist_routes import specialist_bp
+    app.register_blueprint(specialist_bp)
+
     return app
