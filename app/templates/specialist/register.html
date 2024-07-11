@@ -18,7 +18,13 @@
             {% if column_names %}
                 <div class="form-group">
                     {% for column_name in column_names %}
-                        <input autocomplete="off" autofocus class="form-control" id="{{ column_name }}" name="{{ column_name }}" placeholder="{{ column_name }}" type="text" required>
+                        {% if column_name == "Password" or column_name == "Confirmation" %}
+                            <input autocomplete="off" autofocus class="form-control" id="{{ column_name }}" name="{{ column_name }}" placeholder="{{ column_name }}" type="password" required>
+                        {% elif column_name == "Email" %}
+                            <input autocomplete="off" autofocus class="form-control" id="{{ column_name }}" name="{{ column_name }}" placeholder="{{ column_name }}" type="email" required>
+                        {% else %}
+                            <input autocomplete="off" autofocus class="form-control" id="{{ column_name }}" name="{{ column_name }}" placeholder="{{ column_name }}" type="text" required>
+                        {% endif %}
                     {% endfor %}
                 </div>
             {% endif %}

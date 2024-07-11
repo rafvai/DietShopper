@@ -1,8 +1,10 @@
-{% extends "base.html" %}
-
-{% block title %}Home page{% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Specialist Login</title>
+</head>
+<body>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
@@ -12,9 +14,4 @@
             </ul>
         {% endif %}
     {% endwith %}
-<body>
-    <h1>{{ welcome_message }}</h1>
-    <div class="container">
-    </div>
 </body>
-{% endblock %}

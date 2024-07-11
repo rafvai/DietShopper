@@ -259,9 +259,8 @@ def diet_plan():
     userid = session["user_id"]
 
     if request.method == "GET":
-        # select the dietplans available for that user and store in a variable
-        retrieve_dietplans_query = text("SELECT dietplan_id, name FROM DietPlans WHERE user_id = :userid")
-        alternative_dietplans = db.session.execute(retrieve_dietplans_query, {'userid': userid}).fetchall()
+        # retrieve all dietplans available for that patient
+        alternative_dietplans = db.session.query(DietPlans.dietplan_id, DietPlans.name).filter(DietPlans.user_id == userid).all()
         # return all the names of the dietplans assigned for that user
         return render_template("diet_plan.html", alternative_dietplans = alternative_dietplans)    
     
@@ -289,8 +288,10 @@ def diet_plan():
                 quantity = row[3]
                 output[day_name][meal_name].append((food, quantity))
 
-        # pass them to front end
-        return render_template("diet_plan.html", assigned_meals = output, diet_plan_info = diet_plan_info)
+            # pass them to front end
+            return render_template("diet_plan.html", assigned_meals = output, diet_plan_info = diet_plan_info)
+        
+        flash("Error retrieving the diet plan", "error")
     
     # handle case where no diet plan is selected or invalid input
     return redirect(url_for('main.diet_plan'))

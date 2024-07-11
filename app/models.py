@@ -81,8 +81,7 @@ class Substitutes(db.Model):
 class Specialists(db.Model):
     __tablename__="Specialists"
 
-    specialist_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -94,7 +93,7 @@ class Patients(db.Model):
     __tablename__="Patients"
 
     patient_id = db.Column(db.Integer, primary_key=True)
-    specialist_id = db.Column(db.Integer, db.ForeignKey("Specialists.specialist_id"), nullable=False)
+    specialist_username = db.Column(db.String(80), db.ForeignKey("Specialists.username"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("Users.user_id"), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 

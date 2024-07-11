@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Diet Plan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Diet Plans</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('specialist.display_selected_dietplan', patient_id=patient_id) }}" method="post">
+        <label for="diet_plan_id">Select a Diet Plan:</label>
+        <select id="diet_plan_id" name="diet_plan_id">
+            {% for dietplan in retrieved_dietplans %}
+                <option value="{{ dietplan.dietplan_id }}">{{ dietplan.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">View Diet Plan</button>
+    </form>
+
+    {% if assigned_meals and diet_plan_info %}
+        <h2>Diet Plan: {{ diet_plan_info.name }}</h2>
+        {% for day, meals in assigned_meals.items() %}
+            <h3>{{ day }}</h3>
+            {% for meal, foods in meals.items() %}
+                <h4>{{ meal }}</h4>
+                <ul>
+                    {% for food, quantity in foods %}
+                        <li>{{ food }} - {{ quantity }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
