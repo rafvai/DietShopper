@@ -15,6 +15,18 @@
 <body>
     <h1>{{ welcome_message }}</h1>
     <div class="container">
+        <div class="icon">
+            <a href="{{ url_for('specialist.specialist_add_patient') }}">
+                <img src="{{ url_for('static', filename='add-patient.png') }}" alt="Add patient">
+            </a>
+            <p class="icon-text">Add patient</p>
+        </div>
+        <div class="icon">
+            <a href="{{ url_for('specialist.display_patients') }}">
+                <img src="{{ url_for('static', filename='display-patient.png') }}" alt="Display patients">
+            </a>
+            <p class="icon-text">Display patients</p>
+        </div>      
     </div>
 </body>
 {% endblock %}

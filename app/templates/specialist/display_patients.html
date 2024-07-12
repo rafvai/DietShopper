@@ -4,23 +4,40 @@
     <meta charset="UTF-8">
     <title>Display Patients</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function redirectToPatient() {
+            const selectElement = document.getElementById('patients');
+            const selectedUserId = selectElement.value;
+            if (selectedUserId) {
+                const baseUrl = "{{ url_for('specialist.display_selected_dietplan', patient_id=0) }}";
+                const url = baseUrl.replace('0', selectedUserId);
+                window.location.href = url;
+            } else {
+                alert('Please select a patient.');
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>Patients</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-    <ul>
-        {% for username in patient_usernames %}
-            <li><a href="{{ url_for('specialist.display_selected_dietplan', patient_id=username.user_id) }}">{{ username.username }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Patients</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <label for="patients">Select Patient:</label>
+        <select id="patients" name="patients">
+            <option value="">-- Select a patient --</option>
+            {% for username in patient_usernames %}
+                <option value="{{ username.user_id }}">{{ username.username }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="redirectToPatient()">Select</button>
+    </div>
 </body>
 </html>
