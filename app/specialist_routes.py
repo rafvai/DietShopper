@@ -107,6 +107,7 @@ def specialist_register():
 
     return render_template("specialist/register.html", column_names=column_names)
 
+
 @specialist_bp.route("/index", methods=['GET'])
 
 def specialist_index():
@@ -118,7 +119,7 @@ def specialist_index():
 def specialist_logout():
     """ Allow user to log out """
     session.clear()
-    return redirect(url_for("main.login"))
+    return redirect(url_for("specialist.specialist_login"))
 
 
 @specialist_bp.route("/add-patient", methods=['GET', 'POST'])

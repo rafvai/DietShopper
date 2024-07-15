@@ -205,7 +205,7 @@ def show_selected_shopping_list(diet_plan_id):
     for name, quantity in items:
         aggregate_items[name] = aggregate_items.get(name, 0) + quantity
     if not aggregate_items:
-        flash ("You don't have any food in the selected diet plan", "error availability dietplans")
+        flash ("You don't have any food in the selected diet plan", "error")
         return render_template("shopping_list.html")
     return render_template("shopping_list.html", items=aggregate_items)
 
@@ -345,7 +345,7 @@ def add_diet():
         insert_meals_and_foods(formatted_meal_data)
 
         db.session.commit()
-        flash("Diet plan added successfully!", "added plan successfully")
+        flash("Diet plan added successfully!", "success")
         return redirect(url_for('main.diet_plan'))
 
     except SQLAlchemyError as e:
@@ -369,14 +369,14 @@ def remove_diet():
         if assigned_diets:
             return render_template("remove_diet.html", assigned_diets=assigned_diets)
         else:
-            flash("There is no assigned diet plan for this user", "error retrieving diet plan")
+            flash("There is no assigned diet plan for this user", "error")
             return redirect(url_for('main.diet_plan'))
 
     elif request.method == "POST":
         delete_dietids = request.form.getlist("diet_id")
         
         if not delete_dietids:
-            flash("No diet plan selected for deletion", "delete not selected")
+            flash("No diet plan selected for deletion", "error")
             return redirect(url_for('main.remove_diet'))
 
         try:
@@ -386,17 +386,17 @@ def remove_diet():
 
             # Check if all the diet plans exist
             if None in diet_plans_to_delete:
-                flash("Some diet plans could not be found or are invalid.", "delete failed")
+                flash("Some diet plans could not be found or are invalid.", "error")
                 return redirect(url_for('main.remove_diet'))
 
             for diet_plan in diet_plans_to_delete:
                 db.session.delete(diet_plan)
             db.session.commit()
 
-            flash("Selected diet plans were successfully deleted.", "delete succesfully")
+            flash("Selected diet plans were successfully deleted.", "success")
         except Exception as e:
             db.session.rollback()
-            flash(f"An error occurred while deleting diet plans: {str(e)}")
+            flash(f"An error occurred while deleting diet plans: {str(e)}","error")
 
     return redirect(url_for('main.diet_plan'))
 
@@ -454,7 +454,7 @@ def add_food():
         db.session.commit()
 
         # Flash messaggio di successo
-        flash("The food has been added succesfully!", "food added successfully")
+        flash("The food has been added succesfully!", "success")
 
         return redirect(url_for('main.add_food'))  
 
@@ -597,6 +597,6 @@ def add_measurement():
         db.session.commit()
 
         # Display success message
-        flash('Record added successfully!', 'added record successfully')
+        flash('Record added successfully!', 'success')
 
     return redirect(url_for("main.measurements"))

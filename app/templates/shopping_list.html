@@ -16,7 +16,7 @@
     {% endwith %}
     <div class="container">
         {% if message %}
-            <p class="centered-message">{{ message|safe }}</p>
+            <h4>{{ message|safe }}</h4>
         {% endif %}
 
         {% if alternative_dietplans %}
@@ -28,6 +28,7 @@
                         <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
                     {% endfor %}
                 </select>
+                <br>
                 <button type="submit">Get Shopping List</button>
             </form>
         {% endif %}

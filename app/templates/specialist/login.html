@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Specialist Login</title>
     <style>
         html, body {
             height: 100%;
@@ -89,14 +89,14 @@
         }
 
         .signup-link ul {
-            list-style-type: none; /* Remove bullets */
+            list-style-type: none; 
             padding: 0;
             margin: 0;
             width: 100%;
         }
 
         .signup-link li {
-            text-align: center; /* Center the text */
+            text-align: center; 
         }
         
         .signup-link a {
@@ -120,7 +120,7 @@
         <header class="logo">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
         </header>
-        <h1 class="text-center">Login</h1>
+        <h1 class="text-center">Specialist Login</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul>
@@ -141,6 +141,13 @@
             </div>
             <button type="submit" class="btn-login">Login</button>
         </form>
+        <div class="signup-link">
+            <ul>
+                <li><a href="{{ url_for('specialist.specialist_register') }}">Don't you have a specialist account? Sign up here !</a></li>
+                <br>
+                <li><a href="{{ url_for('main.login') }}">Are you a patient? Login here !</a></li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
