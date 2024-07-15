@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Specialist Login</title>
-</head>
-<body>
+{% extends "specialist/specialist_base.html" %}
+
+{% block title %}Display Diet Plans {% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Add patient</h2>
+    <!-- Flash messages-->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul>
@@ -14,4 +14,21 @@
             </ul>
         {% endif %}
     {% endwith %}
-</body>
+    <div class="container">
+        {% if column_names %}
+            <form action="{{ url_for('specialist.specialist_add_patient') }}" method="POST">
+                {% for column_name in column_names %}
+                    {% if column_name == "Email" %}
+                        <label for="{{ column_name }}"> {{ column_name }}</label>
+                        <input type="email" id="{{ column_name }}" name="{{ column_name }}" placeholder="Enter {{ column_name}}" required>
+                    {% else %}
+                        <label for="{{ column_name }}"> {{ column_name }}</label>
+                        <input type="text" id="{{ column_name }}" name="{{ column_name }}" placeholder="Enter {{ column_name}}" required>
+                    {% endif %}
+                {% endfor %}
+                <br>
+                <button type="submit">Add</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

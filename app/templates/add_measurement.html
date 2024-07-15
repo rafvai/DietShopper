@@ -3,16 +3,7 @@
 {% block title %}Add measurement{% endblock %}
 
 {% block content %}
-    <h2 class="text-center">MEASUREMENTS</h2>
-    <form action="{{ url_for('main.add_measurement') }}" method="POST">
-        {% for column_name in column_names %}
-            <label for="{{ column_name }}"> {{ column_name }}</label> 
-            <input type="number" id="{{ column_name }}" name="{{ column_name }}" step="any"placeholder="Enter value" required>
-            <br>
-        {% endfor %}
-        <button type="submit">Submit</button>
-    </form>
-    
+    <h2 class="text-center">Measurements</h2>
     <!-- Flash messages display -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -25,4 +16,14 @@
             </div>
         {% endif %}
     {% endwith %}
+    {% if column_names %}
+        <form action="{{ url_for('main.add_measurement') }}" method="POST">
+            {% for column_name in column_names %}
+                <label for="{{ column_name }}"> {{ column_name }}</label> 
+                <input type="number" id="{{ column_name }}" name="{{ column_name }}" step="any"placeholder="Enter value" required>
+                <br>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
 {% endblock %}

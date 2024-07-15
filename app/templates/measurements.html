@@ -4,6 +4,16 @@
 
 {% block content %}
     <h2 class="text-center">MY MEASUREMENTS</h2>
+     <!-- Flash messages -->
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="container">
         {% if past_measurements %}
         <form action="/measurements" method="POST">
@@ -74,12 +84,7 @@
                 </tbody>
             </table>
         {% endif %}
-    </div>
-
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
-    
+    </div>   
     <div class="links">
         <ul>
             <li> <a href="{{ url_for('main.add_measurement') }}">Add new record</a></li>

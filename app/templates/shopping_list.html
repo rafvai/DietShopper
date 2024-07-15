@@ -4,7 +4,16 @@
 
 {% block content %}
     <h2 class="text-center">SHOPPING LIST</h2>
-
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="container">
         {% if message %}
             <p class="centered-message">{{ message|safe }}</p>
@@ -41,17 +50,6 @@
                 </tbody>
             </table>
         {% endif %}
-
-        <!-- Flash messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
     </div>
 
     <script>

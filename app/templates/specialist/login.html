@@ -2,32 +2,145 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Specialist Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            background-image: url('{{ url_for("static", filename="specialist_background.jpg") }}'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.98); /* Add transparency to the container background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo img {
+            max-width: 190px; 
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .login-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+        }
+        
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button.btn-login {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button.btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .signup-link {
+            margin-top: 15px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .signup-link ul {
+            list-style-type: none; /* Remove bullets */
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .signup-link li {
+            text-align: center; /* Center the text */
+        }
+        
+        .signup-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form method="POST" action="{{ url_for('specialist.specialist_login') }}">
-        <header>
-            <h1>Login</h1>
+    <div class="container">
+        <header class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
         </header>
-        <div class="form-group">
-            <label for="Username">Username:</label>
-            <input type="text" id="Username" name="Username" required>
-        </div>
-        <div class="form-group">
-            <label for="Password">Password:</label>
-            <input type="password" id="Password" name="Password" required>
-        </div>
-        <button type="submit" class="btn-login">Login</button>
-    </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-            {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+        <h1 class="text-center">Login</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('specialist.specialist_login') }}" class="login-form">
+            <div class="form-group">
+                <label for="Username">Username:</label>
+                <input type="text" id="Username" name="Username" required>
+            </div>
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <input type="password" id="Password" name="Password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
 </body>
 </html>

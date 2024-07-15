@@ -3,15 +3,15 @@
 {% block title %}Add diet{% endblock %}
 
 {% block content %}
-    <!-- Display Flash Messages -->
+    <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="flash-messages">
+        {% if messages %}
             {% for category, message in messages %}
-                <div class="flash-message {{ category }}">{{ message }}</div>
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
             {% endfor %}
-        </div>
-    {% endif %}
+        {% endif %}
     {% endwith %}
     <div class="container">
         <h2 class="text-center">ADD A NEW DIET PLAN</h2>
@@ -35,14 +35,14 @@
                                             <div class="food-container" id="food-container-{{ day.day_type_id }}-{{ meal.meal_type_id }}">
                                                 <div class="food-quantity-pair">
                                                     <label for="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Food:</label>
-                                                    <select id="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]">
+                                                    <select id="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" required>
                                                         <option value="" disabled selected>Select Food</option>
                                                         {% for food in foods %}
                                                             <option value="{{ food.food_id }}">{{ food.name }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     <label for="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Quantity:</label>
-                                                    <input type="number" id="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" placeholder="Enter quantity">
+                                                    <input type="number" id="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" placeholder="Enter quantity" required>
                                                 </div>
                                             </div>
                                             <button type="button" class="add-more-food btn btn-primary" data-day="{{ day.day_type_id }}" data-meal="{{ meal.meal_type_id }}">Add More Food</button>

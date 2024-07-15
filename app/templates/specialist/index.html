@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "specialist/specialist_base.html" %}
 
 {% block title %}Home page{% endblock %}
 
@@ -13,7 +13,7 @@
         {% endif %}
     {% endwith %}
 <body>
-    <h1>{{ welcome_message }}</h1>
+    <h2>Welcome {{ username }}</h2>
     <div class="container">
         <div class="icon">
             <a href="{{ url_for('specialist.specialist_add_patient') }}">
@@ -23,7 +23,7 @@
         </div>
         <div class="icon">
             <a href="{{ url_for('specialist.display_patients') }}">
-                <img src="{{ url_for('static', filename='display-patient.png') }}" alt="Display patients">
+                <img src="{{ url_for('static', filename='display-patients.png') }}" alt="Display patients">
             </a>
             <p class="icon-text">Display patients</p>
         </div>      

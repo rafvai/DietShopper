@@ -1,0 +1,223 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Variables */
+:root {
+    --primary-color: #007bff;
+    --primary-color-hover: #0056b3;
+    --secondary-color: #333;
+    --bg-color: #000;
+    --container-bg-color: #fff;
+    --heading-color: #333;
+    --link-hover-color: #0056b3;
+    --success-bg: #d4edda;
+    --success-text: #155724;
+    --error-bg: #f8d7da;
+    --error-text: #721c24;
+    --padding: 20px;
+}
+
+/* Global Styles */
+html, body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: var(--bg-color);
+    color: var(--secondary-color);
+    background-image: url('/static/specialist_background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Headings and Paragraphs */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading-color);
+    margin-bottom: 15px;
+}
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.75em; text-align: center; margin-bottom: 20px; }
+h3 { font-size: 1.5em; }
+h4 { font-size: 1.25em; margin-bottom: 10px; }
+p { margin-bottom: 15px; }
+
+/* Navigation Links */
+.nav-links ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+.nav-links ul li {
+    margin-right: 15px;
+}
+.nav-links ul li:last-child {
+    margin-right: 0;
+}
+
+.links ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0%;
+}
+.links ul li{
+    margin-right: 15px;
+}
+
+.links ul li:last-child {
+    margin-right: 0;
+}
+
+/* Form Styles */
+form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input, form select, form textarea {
+    display: block;
+    width: flex;
+    max-width: 600px;
+    padding: 10px;
+    margin: 0 auto 15px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    display: inline-block;
+    width: flex;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: var(--primary-color-hover);
+}
+
+/* Container Styles */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--padding);
+    background-color: var(--container-bg-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.98;
+}
+
+/* Media Queries */
+@media (max-width: 900px) {
+    .container { width: 95%; }
+}
+
+@media (max-width: 600px) {
+    body { font-size: 0.9em; }
+    h1 { font-size: 1.75em; }
+    h2 { font-size: 1.5em; }
+    h3 { font-size: 1.25em; }
+    table { font-size: 0.9em; }
+    .edit-btn { padding: 5px; }
+}
+
+/* Profile Header */
+.profile-header img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+}
+
+/* Logo */
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Specific Styles for Label, Select and Button */
+label[for="patients"], #patients, button {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 15px auto;
+    text-align: center;
+}
+
+label[for="patients"] {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#patients {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto 15px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.icon img {
+    width: 70px;
+    height: 70px;
+    /* Adjust image size as needed */
+}
+
+.icon-text {
+    margin-left: 10px;
+    font-weight: bold;
+    flex-grow: 1;
+}

@@ -111,7 +111,8 @@ def specialist_register():
 
 def specialist_index():
     """ Show specialist home page """
-    return render_template("specialist/index.html")
+    username = session['username']
+    return render_template("specialist/index.html", username=username)
 
 @specialist_bp.route("/logout")
 def specialist_logout():
