@@ -38,7 +38,9 @@
     {% endif %}
     
     <!-- Link to go back to the diet plan overview -->
-    <div class="text-center mt-3">
-        <a href="{{ url_for('main.diet_plan') }}" class="btn btn-secondary">Back to Diet Plans</a>
+    <div class="links">
+        <ul>
+            <li><a href="{{ url_for('main.diet_plan') }}">Back to Diet Plans</a></li>
+        </ul>        
     </div>
 {% endblock %}

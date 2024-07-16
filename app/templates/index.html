@@ -7,29 +7,28 @@
     <h2>{{ welcome_message }}</h2>
     <div class="container">
         <div class="icon">
+            <a href="{{ url_for('main.diet_plan') }}">
+                <img src="{{ url_for('static', filename='diet_plan.png') }}" alt="Diet Plans">
+            </a>
+            <p class="icon-text">Diet plans</p>
+        </div>
+        <div class="icon">
             <a href="{{ url_for('main.shopping_list') }}">
                 <img src="{{ url_for('static', filename='shopping_cart.png') }}" alt="Shopping Cart">
             </a>
             <p class="icon-text">Shopping list</p>
         </div>
-
-        <div class="icon">
-            <a href="{{ url_for('main.diet_plan') }}">
-                <img src="{{ url_for('static', filename='diet_plan.png') }}" alt="Diet Plans">
-            </a>
-            <p class="icon-text">Diet programs</p>
-        </div>
         <div class ="icon">
             <a href="{{ url_for('main.measurements') }}">
                 <img src="{{ url_for('static', filename='measurement.png')}}" alt="My measurements">
             </a>
-            <p class="icon-text">Monitor your progress</p>
+            <p class="icon-text">Measurements</p>
         </div>
         <div class="icon">
             <a href="{{ url_for('main.my_profile') }}">
                 <img src="{{ url_for('static', filename='my_account.png')}}" alt="My profile">
             </a>
-            <p class="icon-text">Go to your page profile</p>
+            <p class="icon-text">My profile</p>
         </div>
     </div>
 </body>

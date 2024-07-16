@@ -26,4 +26,10 @@
             <button type="submit">Submit</button>
         </form>
     {% endif %}
+    <div class="links">
+        <ul>
+            <li><a href="{{ url_for('main.measurements') }}">Diet Plans</a></li>
+            <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
+        </ul>        
+    </div>
 {% endblock %}
