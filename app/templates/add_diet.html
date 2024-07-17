@@ -43,6 +43,7 @@
                                                     </select>
                                                     <label for="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Quantity:</label>
                                                     <input type="number" id="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" placeholder="Enter quantity" required>
+                                                    <button type="button" class="remove-food btn btn-danger">Remove</button>
                                                 </div>
                                             </div>
                                             <button type="button" class="add-more-food btn btn-primary" data-day="{{ day.day_type_id }}" data-meal="{{ meal.meal_type_id }}">Add More Food</button>
@@ -84,6 +85,12 @@
 
                 // Append the new input fields
                 foodContainer.appendChild(newFoodQuantityPair);
+
+                // Add event listener for the new remove button
+                const removeButton = newFoodQuantityPair.querySelector('.remove-food');
+                removeButton.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
             }
 
             // Add more food input fields on button click
@@ -92,6 +99,13 @@
                     const mealTypeId = this.dataset.meal;
                     const dayTypeId = this.dataset.day;
                     addFoodInputFields(mealTypeId, dayTypeId);
+                });
+            });
+
+            // Remove food input fields on button click
+            document.querySelectorAll('.remove-food').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    this.parentElement.remove();
                 });
             });
         });
