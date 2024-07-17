@@ -280,16 +280,15 @@ def diet_plan():
             
             # create a default dict in which for every day and meal there's the corresponding food and quantity
             output = defaultdict(lambda: defaultdict(list))
+            day_totals = defaultdict(int)  # To store total items per day
 
             for row in result:
-                day_name =  row[0]
-                meal_name = row[1]
-                food = row[2]
-                quantity = row[3]
+                day_name, meal_name, food, quantity = row
                 output[day_name][meal_name].append((food, quantity))
+                day_totals[day_name] += 1  # Increment the count of food items for the day
 
             # pass them to front end
-            return render_template("diet_plan.html", assigned_meals = output, diet_plan_info = diet_plan_info)
+            return render_template("diet_plan.html", assigned_meals=output, diet_plan_info=diet_plan_info, day_totals=day_totals)
         
         flash("Error retrieving the diet plan", "error")
     

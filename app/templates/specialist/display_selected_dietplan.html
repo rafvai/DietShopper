@@ -38,21 +38,20 @@
             </thead>
             <tbody>
                 {% for day, meal_type in assigned_meals.items() %}
-                    {% set meal_count = meal_type|length %}
+                    {% set total_items = day_totals[day] %}
                     {% for meal, foods in meal_type.items() %}
+                        {% set items_per_meal = foods|length %}
                         <tr>
                             {% if loop.first %}
-                                <td rowspan="{{ meal_count }}">{{ day }}</td>
+                                <td rowspan="{{ total_items }}">{{ day }}</td>
                             {% endif %}
-                            <td>{{ meal }}</td>
+                            <td rowspan="{{ items_per_meal }}">{{ meal }}</td>
                             <td>{{ foods[0][0] }}</td>
                             <td>{{ foods[0][1] }}</td>
                         </tr>
 
                         {% for food in foods[1:] %}
                             <tr>
-                                <td></td>
-                                <td></td>
                                 <td>{{ food[0] }}</td>
                                 <td>{{ food[1] }}</td>
                             </tr>

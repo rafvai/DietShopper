@@ -205,16 +205,15 @@ def display_selected_dietplan(patient_id):
                 
             # create a default dict in which for every day and meal there's the corresponding food and quantity
             output = defaultdict(lambda: defaultdict(list))
+            day_totals = defaultdict(int)
 
             for row in result:
-                day_name =  row[0]
-                meal_name = row[1]
-                food = row[2]
-                quantity = row[3]
+                day_name, meal_name, food, quantity = row
                 output[day_name][meal_name].append((food, quantity))
+                day_totals[day_name] += 1
 
             # pass them to frontend
-            return render_template("specialist/display_selected_dietplan.html", assigned_meals = output, diet_plan_info = diet_plan_info, patient_id=patient_id)
+            return render_template("specialist/display_selected_dietplan.html", assigned_meals = output, diet_plan_info = diet_plan_info, patient_id=patient_id, day_totals=day_totals)
         
         flash(" Error retrieving the diet plan", "error")
 
