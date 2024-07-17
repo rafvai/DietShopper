@@ -3,7 +3,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from sqlalchemy import inspect
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import DayTypes, DietPlans, Foods, MealTypes, Meals, Patients, Specialists, Users
-from app.helpers import login_required
+from app.specialist_helper import login_required
 from . import db
 
 specialist_bp = Blueprint('specialist', __name__, url_prefix='/specialist')
@@ -109,7 +109,7 @@ def specialist_register():
 
 
 @specialist_bp.route("/index", methods=['GET'])
-
+@login_required
 def specialist_index():
     """ Show specialist home page """
     username = session['username']
@@ -123,7 +123,7 @@ def specialist_logout():
 
 
 @specialist_bp.route("/add-patient", methods=['GET', 'POST'])
-
+@login_required
 def specialist_add_patient():
     """ Allow specialist to add a patient to his list """
 
@@ -163,7 +163,7 @@ def specialist_add_patient():
 
 
 @specialist_bp.route("/display-patients", methods=['GET'])
-
+@login_required
 def display_patients():
     """ Allow specialist to retrieve and see patient's usernames"""
 
@@ -179,7 +179,7 @@ def display_patients():
     
 
 @specialist_bp.route("/display-patients/<int:patient_id>", methods = ['GET','POST'])
-
+@login_required
 def display_selected_dietplan(patient_id):
     """ Show the selected diet plan """
 
