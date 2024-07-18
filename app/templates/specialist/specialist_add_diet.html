@@ -1,0 +1,116 @@
+{% extends "specialist/specialist_base.html" %}
+
+{% block title %}Add Diet{% endblock %}
+
+{% block content %}
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h2 class="text-center">ADD A NEW DIET PLAN</h2>
+        <form action="{{ url_for('specialist.specialist_add_diet') }}" method="POST">
+            <label for="patient_id">Select Patient:</label>
+            {% if patients %}
+                <select id="patient_id" name="patient_id" required>
+                    <option value="">Select a patient</option>
+                    {% for patient in patients %}
+                        <option value="{{ patient.user_id }}">{{ patient.username }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            <label for="dietName">Insert Diet Plan name:</label>
+            <input type="text" id="dietName" name="dietName" required>
+            <br>
+            <label for="dietDescription">Description:</label>
+            <input type="text" id="dietDescription" name="dietDescription">
+            <br>
+            {% if days %}
+                <div class="days-container">
+                    {% for day in days %}
+                        <div class="day-section">
+                            <h2>{{ day.day_name }}</h2>
+                            {% if meals %}
+                                <div class="meals-container">
+                                    {% for meal in meals %}
+                                        <div class="meal-section">
+                                            <h4>{{ meal.meal_name }}</h4>
+                                            <div class="food-container" id="food-container-{{ day.day_type_id }}-{{ meal.meal_type_id }}">
+                                                <div class="food-quantity-pair">
+                                                    <label for="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Food:</label>
+                                                    <select id="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" required>
+                                                        <option value="" disabled selected>Select Food</option>
+                                                        {% for food in foods %}
+                                                            <option value="{{ food.food_id }}">{{ food.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <label for="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Quantity:</label>
+                                                    <input type="number" id="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0" name="quantity-{{ day.day_type_id }}-{{ meal.meal_type_id }}[]" placeholder="Enter quantity" required>
+                                                    <button type="button" class="remove-food btn btn-danger">Remove</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="add-more-food btn btn-primary" data-day="{{ day.day_type_id }}" data-meal="{{ meal.meal_type_id }}">Add More Food</button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit Diet Plan</button>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function addFoodInputFields(mealTypeId, dayTypeId) {
+                const foodContainer = document.getElementById(`food-container-${dayTypeId}-${mealTypeId}`);
+                const lastFoodQuantityPair = foodContainer.querySelector('.food-quantity-pair:last-child');
+                const newFoodQuantityPair = lastFoodQuantityPair.cloneNode(true);
+
+                const newIndex = foodContainer.querySelectorAll('.food-quantity-pair').length;
+                const foodInput = newFoodQuantityPair.querySelector('select[name^="food"]');
+                const quantityInput = newFoodQuantityPair.querySelector('input[name^="quantity"]');
+
+                foodInput.id = `food-${dayTypeId}-${mealTypeId}-${newIndex}`;
+                foodInput.name = `food-${dayTypeId}-${mealTypeId}[]`;
+                foodInput.value = "";
+
+                quantityInput.id = `quantity-${dayTypeId}-${mealTypeId}-${newIndex}`;
+                quantityInput.name = `quantity-${dayTypeId}-${mealTypeId}[]`;
+                quantityInput.value = "";
+
+                foodContainer.appendChild(newFoodQuantityPair);
+
+                const removeButton = newFoodQuantityPair.querySelector('.remove-food');
+                removeButton.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            }
+
+            document.querySelectorAll('.add-more-food').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const mealTypeId = this.dataset.meal;
+                    const dayTypeId = this.dataset.day;
+                    addFoodInputFields(mealTypeId, dayTypeId);
+                });
+            });
+
+            document.querySelectorAll('.remove-food').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+        });
+    </script>
+{% endblock %}

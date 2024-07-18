@@ -303,9 +303,6 @@ def add_diet():
     """ Allow user to add a new diet plan """
     # handle and store the autentication of the user
     userid = session["user_id"]
-    if not userid:
-        flash("User not logged in", "error")
-        return redirect(url_for('main.login'))
     
     if request.method == "GET":
         try:

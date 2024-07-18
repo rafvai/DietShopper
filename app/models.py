@@ -37,7 +37,7 @@ class DietPlans(db.Model):
 
     dietplan_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'))
-    name = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=func.now())
 

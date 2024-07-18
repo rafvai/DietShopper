@@ -26,7 +26,13 @@
                 <img src="{{ url_for('static', filename='display-patients.png') }}" alt="Display patients">
             </a>
             <p class="icon-text">Display patients</p>
-        </div>      
+        </div>  
+        <div class="icon">
+            <a href="{{ url_for('specialist.specialist_add_diet') }}">
+                <img src="{{ url_for('static', filename='add_diet2.png') }}" alt="Add diet">
+            </a>
+            <p class="icon-text">Add diet</p>
+        </div>    
     </div>
 </body>
 {% endblock %}
