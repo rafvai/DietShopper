@@ -108,26 +108,27 @@ def specialist_logout():
 @login_required
 def specialist_add_patient():
     """ Allow specialist to add a patient to his list """
-
+    # retrieve specialist username
     specialist_name = session['username']
 
     if request.method == 'GET':
         return render_template("specialist/add_patient.html", column_names=['Username', 'Email'])
     
     elif request.method == 'POST':
+        # take the input of the user
         patient_username = request.form.get("Username")
         patient_email = request.form.get("Email")
-
+        # check for missing inputs
         if not patient_username or not patient_email:
             flash("You must fill all the fields", "error")
             return redirect(url_for("specialist.specialist_add_patient"))
-        
+        # recover patient id 
         patient_id = db.session.query(Users.user_id).filter(Users.username == patient_username, Users.email == patient_email).first()
         
         if not patient_id:
             flash("Error, please check patient's info", "error")
             return redirect(url_for("specialist.specialist_add_patient"))
-
+        # create a new patient and add it to the dict
         new_patient = Patients(specialist_username=specialist_name, user_id=patient_id.user_id)
         db.session.add(new_patient)
         db.session.commit()
@@ -158,12 +159,15 @@ def display_selected_dietplan(patient_id):
     """ Show the selected diet plan """
 
     if request.method == "GET":
+        # retrieve the diet plans for that patient
         retrieved_dietplans = db.session.query(DietPlans.dietplan_id, DietPlans.name).filter(DietPlans.user_id == patient_id).all()
         return render_template("specialist/display_selected_dietplan.html", retrieved_dietplans=retrieved_dietplans, patient_id=patient_id)    
     
     elif request.method == "POST":
+        # take id of the selected diet plan 
         diet_plan_id = request.form.get('diet_plan_id')
         if diet_plan_id:     
+            # retrieve all the info of the diet plan selected
             diet_plan_info = DietPlans.query.filter_by(dietplan_id=diet_plan_id).first()
             result = (db.session.query(DayTypes.day_name, MealTypes.meal_name, Foods.name, Meals.quantity)
                       .join(Meals, Meals.day_type_id == DayTypes.day_type_id)
@@ -174,10 +178,11 @@ def display_selected_dietplan(patient_id):
                 
             output = defaultdict(lambda: defaultdict(list))
             day_totals = defaultdict(int)
-
+            # assign foods to the corresponding meal of the corresponding day
             for row in result:
                 day_name, meal_name, food, quantity = row
                 output[day_name][meal_name].append((food, quantity))
+                # count total food items for each day and store it in the dict
                 day_totals[day_name] += 1
 
             return render_template("specialist/display_selected_dietplan.html", assigned_meals=output, diet_plan_info=diet_plan_info, patient_id=patient_id, day_totals=day_totals)

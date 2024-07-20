@@ -23,10 +23,12 @@ def index():
     """Show welcome message and options"""
 
     userid = session["user_id"]
-    user = Users.query.get(userid)
-    welcome_message = f"Welcome back, {user.username}!" if user else "Welcome!"
-
-    return render_template("index.html", welcome_message=welcome_message)
+    username = db.session.query(Users.username).filter(Users.user_id == userid).first()
+    if username:
+        return render_template("index.html", username=username[0])
+    else:
+        flash("An error occurred while retrieving user's username", "error")
+        return redirect(url_for('main.index'))
 
 
 @main.route("/login", methods=["GET", "POST"])
@@ -95,6 +97,14 @@ def register():
         return redirect(url_for("main.index"))
     
     return render_template("register.html")
+
+
+@main.route("/about", methods=['GET'])
+@login_required
+def about():
+    """ render the page description of the app """
+    return render_template("about.html")
+
 
 @main.route("/my-profile", methods=['GET'])
 @login_required
