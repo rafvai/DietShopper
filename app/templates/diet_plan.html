@@ -119,6 +119,23 @@
 				}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.flex{display:flex}.h-60{height:15rem}.w-60{width:15rem}.flex-shrink-0{flex-shrink:0}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.border{border-width:1px}.border-border{border-color:hsl(var(--border))}.bg-card{background-color:hsl(var(--card))}.bg-input{background-color:hsl(var(--input))}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.font-semibold{font-weight:600}.text-card-foreground{color:hsl(var(--card-foreground))}.text-foreground{color:hsl(var(--foreground))}@media (min-width: 768px){.md\:mb-0{margin-bottom:0px}.md\:flex-row{flex-direction:row}.md\:items-start{align-items:flex-start}.md\:justify-center{justify-content:center}.md\:space-x-10 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2.5rem * var(--tw-space-x-reverse));margin-left:calc(2.5rem * calc(1 - var(--tw-space-x-reverse)))}.md\:text-left{text-align:left}}
 		</style></head>
   <body>
+        <nav class="flex justify-between items-center p-4">
+          <div class="text-lg font-bold">{{ username }}</div>
+          <ul class="flex space-x-4">
+            <li><a href="/about" class="hover:text-primary">About</a></li>
+            <li><a href="#" class="hover:text-primary">Services</a></li>
+            <li><a href="#" class="hover:text-primary">Blog</a></li>
+            <li><a href="#" class="hover:text-primary">Course</a></li>
+            <li><a href="#" class="hover:text-primary">E-Books</a></li>
+            <li><a href="/contact" class="hover:text-primary">Contact</a></li>
+          </ul>
+          <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
+        </nav>
+        <section class="relative">
+            <img src="static/file.jpg" alt="Healthy meal" class="w-full h-64 object-cover">
+            <div class="absolute inset-0 flex items-center justify-center">
+            </div>
+          </section>  
     <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
 		{% if alternative_dietplans %}
         <div class="flex-shrink-0 mb-6 md:mb-0">
@@ -168,40 +185,34 @@
 			<h4>Diet plan description: {{ diet_plan_info.description }}</h4>
 		{% endif %}
 	</div>
+    <div>
         {% if assigned_meals %}
-        <table class="diet-table">
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Meal Type</th>
-                    <th>Food Item</th>
-                    <th>Quantity (gr)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for day, meal_type in assigned_meals.items() %}
-                    {% set total_items = day_totals[day] %}
-                    {% for meal, foods in meal_type.items() %}
-                        {% set items_per_meal = foods|length %}
-                        <tr>
-                            {% if loop.first %}
-                                <td rowspan="{{ total_items }}">{{ day }}</td>
-                            {% endif %}
-                            <td rowspan="{{ items_per_meal }}">{{ meal }}</td>
-                            <td>{{ foods[0][0] }}</td>
-                            <td>{{ foods[0][1] }}</td>
-                        </tr>
-
-                        {% for food in foods[1:] %}
-                            <tr>
-                                <td>{{ food[0] }}</td>
-                                <td>{{ food[1] }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
+            {% for day, meal_type in assigned_meals.items() %}
+                <section class="py-8">
+                    <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-card p-4 rounded shadow">
+                            <h2 class="text-xl font-bold mt-4">{{ day }}</h2>
+    
+                            {% set total_items = day_totals[day] %}
+    
+                            {% for meal, foods in meal_type.items() %}
+                                <div class="meal-section mt-4">
+                                    <h3 class="text-lg font-semibold">{{ meal }}</h3>
+    
+                                    {% for food in foods %}
+                                        <div class="food-item flex justify-between mt-2">
+                                            <span>{{ food[0] }}</span>
+                                            <span>{{ food[1] }} gr</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            {% endfor %}
         {% endif %}
+    </div>
+    
 	</body>
 </html>
