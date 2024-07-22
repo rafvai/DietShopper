@@ -118,50 +118,57 @@
 --radius: 0.5rem;
 				}*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.flex{display:flex}.h-60{height:15rem}.w-60{width:15rem}.flex-shrink-0{flex-shrink:0}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.border{border-width:1px}.border-border{border-color:hsl(var(--border))}.bg-card{background-color:hsl(var(--card))}.bg-input{background-color:hsl(var(--input))}.object-cover{object-fit:cover}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.font-semibold{font-weight:600}.text-card-foreground{color:hsl(var(--card-foreground))}.text-foreground{color:hsl(var(--foreground))}@media (min-width: 768px){.md\:mb-0{margin-bottom:0px}.md\:flex-row{flex-direction:row}.md\:items-start{align-items:flex-start}.md\:justify-center{justify-content:center}.md\:space-x-10 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2.5rem * var(--tw-space-x-reverse));margin-left:calc(2.5rem * calc(1 - var(--tw-space-x-reverse)))}.md\:text-left{text-align:left}}
 		</style></head>
-  <body>
-    <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
-        <div class="flex-shrink-0 mb-6 md:mb-0">
-            <img class="rounded-full w-60 h-60 object-cover" src="https://placehold.co/300x300" alt="Person pouring a drink">
-        </div>
-        <div class="flex flex-col items-center md:items-start md:flex-row md:space-x-10">
-            <div class="text-center md:text-left mb-6 md:mb-0">
-                <h2 class="text-2xl font-semibold mb-4">Select Diet Plan</h2>
-                <div class="mb-4">
-                    <!-- Check if there are diet plans assigned -->
-    {% if assigned_diets %}
-        <form method="POST" action="/remove-diet">
-            <div class="form-group">
-                <label>Select the diet plans you want to delete:</label>
-                <ul class="list-group">
-                    <!-- Loop through each assigned diet and create a checkbox -->
-                    {% for diet in assigned_diets %}
-                        <li class="list-group-item">
-                            <input type="checkbox" name="diet_id" value="{{ diet.dietplan_id }}">
-                            {{ diet.name }} - {{ diet.description }}
-                        </li>
-                    {% endfor %}
-                </ul>
+  	<body>
+		<nav class="flex justify-between items-center p-4">
+			<div class="text-lg font-bold">{{ username }}</div>
+			<ul class="flex space-x-4">
+			  <li><a href="/about" class="hover:text-primary">About</a></li>
+			  <li><a href="#" class="hover:text-primary">Services</a></li>
+			  <li><a href="#" class="hover:text-primary">Blog</a></li>
+			  <li><a href="#" class="hover:text-primary">Course</a></li>
+			  <li><a href="#" class="hover:text-primary">E-Books</a></li>
+			  <li><a href="/contact" class="hover:text-primary">Contact</a></li>
+			</ul>
+			<button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
+		</nav>
+		<section class="relative">
+            <img src="static/file.jpg" alt="Healthy meal" class="w-full h-64 object-cover">
+            <div class="absolute inset-0 flex items-center justify-center">
             </div>
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    {% else %}
-        <p class="text-center">You currently have no assigned diet plans.</p>
-    {% endif %}
+        </section> 
+		<section class="py-muted py-8">
+			<div class="container mx-auto text-center">
+			</div>
+		  </section>
+		<div class="flex flex-col md:flex-row items-center gap-8">
+			<img src="https://placehold.co/300x400" alt="Health Coach Image" style="width: 300px; height: 400px;">
+			<div class="md:w-1/2">
+				<div class="flex flex-col items-center md:items-start md:flex-row md:space-x-10">
+					<div class="text-center md:text-left mb-6 md:mb-0">
+						<h2 class="text-2xl font-semibold mb-4">Remove Diet Plan</h2>
+						<div class="mb-4">
+							<!-- Check if there are diet plans assigned -->
+							{% if assigned_diets %}
+								<form method="POST" action="/remove-diet">
+									<div class="form-group">
+										<label>Select the diet plans you want to delete:</label>
+										<ul class="list-group">
+											<!-- Loop through each assigned diet and create a checkbox -->
+											{% for diet in assigned_diets %}
+												<li class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
+													<input type="checkbox" name="diet_id" value="{{ diet.dietplan_id }}">
+													{{ diet.name }} - {{ diet.description }}
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+									<button type="submit" class="mt-2 bg-button text-button-foreground border border-button-border rounded p-2">Delete</button>
+								</form>
+							{% else %}
+						<p class="text-center">You currently have no assigned diet plans.</p>
+					{% endif %}
                 </div>
             </div>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
-                    <span>ADD A NEW PLAN</span>
-                    <a href="/add-diet" class="text-foreground">
-                        <button class="text-foreground">+</button>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
-                    <span>ADD A NEW FOOD ITEM</span>
-                    <a href="/add-food" class="text-foreground">
-                        <button class="text-foreground">+</button>
-                    </a>
-                </div>
         </div>
     </div>
 </body>

@@ -136,6 +136,10 @@
             <div class="absolute inset-0 flex items-center justify-center">
             </div>
           </section>  
+        <section class="py-muted py-8">
+			<div class="container mx-auto text-center">
+			</div>
+		</section>
     <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
 		{% if alternative_dietplans %}
         <div class="flex-shrink-0 mb-6 md:mb-0">
@@ -143,7 +147,7 @@
         </div>
         <div class="flex flex-col items-center md:items-start md:flex-row md:space-x-10">
             <div class="text-center md:text-left mb-6 md:mb-0">
-                <h2 class="text-2xl font-semibold mb-4">Select Diet Plan</h2>
+                <h2 class="text-2xl font-semibold mb-4">Display Diet Plan</h2>
                 <div class="mb-4">
                     <form action="/diet-plan" method="POST">
                         <label for="dietPlan" class="sr-only">Select Diet Plan:</label>
@@ -158,33 +162,36 @@
                 </div>
             </div>
             <div class="space-y-4">
-                <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
-                    <span>ADD A NEW PLAN</span>
-                    <a href="/add-diet" class="text-foreground">
+                <a href="/add-diet" class="text-foreground">
+                    <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
+                        <span>ADD A NEW PLAN</span>
                         <button class="text-foreground">+</button>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
-                    <span>REMOVE AN EXISTING PLAN</span>
-                    <a href="/remove-diet" class="text-foreground">
+                    </div>
+                </a>
+                <a href="/remove-diet" class="text-foreground">
+                    <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
+                        <span>REMOVE AN EXISTING PLAN</span>
                         <button class="text-foreground">-</button>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
-                    <span>ADD A NEW FOOD ITEM</span>
-                    <a href="/add-food" class="text-foreground">
+                    </div>
+                </a>
+                <a href="/add-food" class="text-foreground">
+                    <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
+                        <span>ADD A NEW FOOD ITEM</span>
                         <button class="text-foreground">+</button>
-                    </a>
-                </div>
-        </div>
+                    </div>
+                </a>
+            </div>
+            
 		{% endif %}
     </div>
-	<div class="diet-info">
-		{% if diet_plan_info %}
-			<h2>Diet plan name: {{ diet_plan_info.name }}</h2>
-			<h4>Diet plan description: {{ diet_plan_info.description }}</h4>
-		{% endif %}
-	</div>
+    {% if diet_plan_info %}
+        <section class="bg-muted py-8">
+            <div class="container mx-auto text-center">
+            <h2 class="text-2xl font-bold">{{ diet_plan_info.name.capitalize() }}</h2>
+            <p class="text-muted-foreground">{{ diet_plan_info.description }}</p>
+            </div>
+        </section>
+	{% endif %}
     <div>
         {% if assigned_meals %}
             {% for day, meal_type in assigned_meals.items() %}
