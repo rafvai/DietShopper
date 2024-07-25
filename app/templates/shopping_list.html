@@ -1,57 +1,101 @@
-{% extends "base.html" %}
-
-{% block title %}Shopping List{% endblock %}
-
-{% block content %}
-    <h2 class="text-center">SHOPPING LIST</h2>
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer="" init=""></script>
+    </head>
+    <body>
+        <nav class="flex justify-between items-center p-4">
+            <div class="text-lg font-bold">{{ username }}</div>
+            <ul class="flex space-x-4">
+              <li><a href="/about" class="hover:text-primary">About</a></li>
+              <li><a href="#" class="hover:text-primary">Services</a></li>
+              <li><a href="#" class="hover:text-primary">Blog</a></li>
+              <li><a href="#" class="hover:text-primary">Course</a></li>
+              <li><a href="#" class="hover:text-primary">E-Books</a></li>
+              <li><a href="/contact" class="hover:text-primary">Contact</a></li>
+            </ul>
+            <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
+          </nav>
+          <section class="relative">
+              <img src="static/file.jpg" alt="Healthy meal" class="w-full h-64 object-cover">
+              <div class="absolute inset-0 flex items-center justify-center">
+              </div>
+            </section>  
+          <!-- white container between img and text, also space for flash msgs-->
+          <section class="py-muted py-8">
+              <div class="container mx-auto text-center">
+                  <!-- Flash messages -->
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                      {% for category, message in messages %}
+                          <div class="alert alert-{{ category }}">
+                              {{ message }}
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
+              </div>
+          </section>   
+        <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
+            {% if alternative_dietplans %}
+                <div class="flex-shrink-0 mb-6 md:mb-0">
+                    <img class="rounded-full w-60 h-60 object-cover" src="static/dietplan.jpg" alt="Person pouring a drink">
                 </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <div class="container">
-        {% if message %}
-            <h4>{{ message|safe }}</h4>
-        {% endif %}
-
-        {% if alternative_dietplans %}
-            <form id="dietPlanForm" method="GET" onsubmit="return redirectToDietPlan()">
-                <label for="dietPlan">Select Diet Plan:</label>
-                <select id="dietPlan" name="dietPlan" required>
-                    <option value="" disabled selected>Select your diet plan</option>
-                    {% for diet_plan in alternative_dietplans %}
-                        <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
-                    {% endfor %}
-                </select>
-                <br>
-                <button type="submit">Get Shopping List</button>
-            </form>
-        {% endif %}
-
-        {% if items %}
-            <table class="shopping-list">
-                <thead>
-                    <tr>
-                        <th>Food</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for name, quantity in items.items() %}
-                        <tr>
-                            <td><a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a></td>
-                            <td>{{ quantity }} gr</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-    </div>
+                <div class="flex flex-col items-center md:items-start md:flex-row md:space-x-10">
+                    <div class="text-center md:text-left mb-6 md:mb-0">
+                        <h2 class="text-2xl font-semibold mb-4">Get Shopping List</h2>
+                        <div class="mb-4">
+                            <form id="dietPlanForm" method="GET" onsubmit="return redirectToDietPlan()">
+                                <label for="dietPlan">Get Shopping List:</label>
+                                <select id="dietPlan" name="dietPlan" required>
+                                    <option value="" disabled selected>Select your diet plan</option>
+                                    {% for diet_plan in alternative_dietplans %}
+                                        <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="mt-2 bg-button text-button-foreground border border-button-border rounded p-2">Get</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+            <!-- Display diet plan info-->
+            {% if diet_info %}
+                <section class="bg-muted py-8">
+                    <div class="container mx-auto text-center">
+                    <h2 class="text-2xl font-bold">{{ diet_info.name.capitalize() }}</h2>
+                    <p class="text-muted-foreground">{{ diet_info.description }}</p>
+                    <p class="text-muted-foreground">{{ diet_info.created_at }}</p>
+                    </div>
+                </section>
+            {% endif %}
+                
+            {% if items %}
+            <section class="bg-muted py-8">
+                <div class="container mx-auto text-center">
+                    <table class="shopping-list">
+                        <thead>
+                            <tr>
+                                <th>Food</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name, quantity in items.items() %}
+                                <tr>
+                                    <td><a href="{{ url_for('main.food_details', food_name=name) }}">{{ name }}</a></td>
+                                    <td>{{ quantity }} gr</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+            
 
     <script>
         function redirectToDietPlan() {
@@ -65,4 +109,5 @@
             return true;
         }
     </script>
-{% endblock %}
+    </body>
+</html>

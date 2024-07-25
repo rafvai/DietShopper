@@ -136,8 +136,19 @@
             <div class="absolute inset-0 flex items-center justify-center">
             </div>
           </section>  
+        <!-- white container between img and text, also space for flash msgs-->
         <section class="py-muted py-8">
 			<div class="container mx-auto text-center">
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 			</div>
 		</section>
     <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
@@ -165,21 +176,28 @@
                 <a href="/add-diet" class="text-foreground">
                     <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
                         <span>ADD A NEW PLAN</span>
-                        <button class="text-foreground">+</button>
+                        <button class="text-foreground"></button>
                     </div>
                 </a>
                 <br>
                 <a href="/remove-diet" class="text-foreground">
                     <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
                         <span>REMOVE AN EXISTING PLAN</span>
-                        <button class="text-foreground">-</button>
+                        <button class="text-foreground"></button>
+                    </div>
+                </a>
+                <br>
+                <a href="/shopping-list" class="text-foreground">
+                    <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
+                        <span>GET SHOPPING LIST</span>
+                        <button class="text-foreground"></button>
                     </div>
                 </a>
                 <br>
                 <a href="/add-food" class="text-foreground">
                     <div class="flex justify-between items-center bg-card text-card-foreground border border-border rounded p-4">
                         <span>ADD A NEW FOOD ITEM</span>
-                        <button class="text-foreground">+</button>
+                        <button class="text-foreground"></button>
                     </div>
                 </a>
             </div>

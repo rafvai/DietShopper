@@ -207,20 +207,27 @@ def shopping_list():
 @login_required
 def show_selected_shopping_list(diet_plan_id):
     """Show the shopping list for the selected diet plan"""
+    # retrieve diet plan info
+    diet_info = DietPlans.query.filter_by(dietplan_id = diet_plan_id).first()
+    # error handling for bad input
+    if not diet_info:
+        flash("The selected dietplan doesn't exist", "error")
     # retrieve food and quantity for the selected diet plan
     items = db.session.query(Foods.name, Meals.quantity).join(Meals, Foods.food_id == Meals.food_id).filter(
         Meals.dietplan_id == diet_plan_id).all()
+    if not items:
+        flash ("You don't have any food in the selected diet plan", "error")
     # store them in a dict 
     aggregate_items = {}
     for name, quantity in items:
         aggregate_items[name] = aggregate_items.get(name, 0) + quantity
     if not aggregate_items:
-        flash ("You don't have any food in the selected diet plan", "error")
+        flash ("Error creating your shopping list", "error")
         return render_template("shopping_list.html")
-    return render_template("shopping_list.html", items=aggregate_items)
+    return render_template("shopping_list.html", items=aggregate_items, diet_info = diet_info)
 
 
-@main.route("/food-details/<string:food_name>", methods=['GET', 'POST'])
+@main.route("/food-details/<string:food_name>", methods=['GET'])
 @login_required
 def food_details(food_name):
     """Allow user to see food details and the substitutes for a specific food"""
@@ -257,9 +264,6 @@ def food_details(food_name):
         
         return render_template("food_details.html", food=food_properties, substitutes=substitutes, chart= Markup(chart))
     
-    ######## to do
-    elif request.method == "POST":
-        pass
 
 
 @main.route("/diet-plan", methods=['GET', 'POST'])

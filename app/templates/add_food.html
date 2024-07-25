@@ -1,41 +1,65 @@
-{% extends "base.html" %}
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer="" init=""></script>
+    </head>
+    <body>
+        <!-- Navigation bar-->
+        <nav class="flex justify-between items-center p-4">
+            <div class="text-lg font-bold">{{ username }}</div>
+            <ul class="flex space-x-4">
+              <li><a href="/about" class="hover:text-primary">About</a></li>
+              <li><a href="#" class="hover:text-primary">Services</a></li>
+              <li><a href="#" class="hover:text-primary">Blog</a></li>
+              <li><a href="#" class="hover:text-primary">Course</a></li>
+              <li><a href="#" class="hover:text-primary">E-Books</a></li>
+              <li><a href="/contact" class="hover:text-primary">Contact</a></li>
+            </ul>
+            <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
+        </nav>
+        <!-- white container between img and text, also space for flash msgs-->
+        <section class="py-muted py-8">
+			<div class="container mx-auto text-center">
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+			</div>
+		</section>
 
-{% block title %}Add food{% endblock %}
-
-{% block content %}
-    <div class="container">
-        <h2 class="text-center">ADD A NEW FOOD ITEM</h2>
-        <h4 class="text-center">All values must be referred to 100 grams of product</h4>
-
-        <!-- Flash messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <form action="/add-food" method="POST">
-            {% for column in columns %}
-                <div class="form-group">
-                    <label for="{{ column }}">{{ column }}</label>
-                    {% if column == 'Name' %}
-                        <input type="text" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }} (Brand)" required>
-                    {% else %}
-                        <input type="number" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}" required>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">Add</button>
-        </form>
-    </div>
+        <section class="bg-muted py-8">
+            <div class="container mx-auto text-center">
+                <h2 class="text-2xl font-bold mb-4">Add a New Food Item</h2>
+                <p class="text-center mb-6">All values must be referred to 100 grams of product</p> 
+                <form action="/add-food" method="POST" class="flex flex-col items-center">
+                    {% for column in columns %}
+                        <div class="form-group mb-4 w-full md:w-1/3">
+                            <label for="{{ column }}" class="block text-left mb-2">{{ column }}</label>
+                            {% if column == 'Name' %}
+                                <input type="text" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }} (Brand)" required class="w-full p-2 border border-border rounded">
+                            {% else %}
+                                <input type="number" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}" required class="w-full p-2 border border-border rounded">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="mt-6 px-6 py-2 border border-primary text-primary text-xl hover:bg-primary hover:text-primary-foreground rounded-lg">Add</button>
+                </form>
+            </div>
+        </section>
+        
     <div class="links">
         <ul>
             <li><a href="{{ url_for('main.diet_plan') }}">Diet Plans</a></li>
             <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
         </ul>        
     </div>
-{% endblock %}
+    </body>
+</html>
