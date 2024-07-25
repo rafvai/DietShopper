@@ -5,38 +5,7 @@
 		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer="" init=""></script>
     </head>
     <body>
-        <nav class="flex justify-between items-center p-4">
-            <div class="text-lg font-bold">{{ username }}</div>
-            <ul class="flex space-x-4">
-              <li><a href="/about" class="hover:text-primary">About</a></li>
-              <li><a href="#" class="hover:text-primary">Services</a></li>
-              <li><a href="#" class="hover:text-primary">Blog</a></li>
-              <li><a href="#" class="hover:text-primary">Course</a></li>
-              <li><a href="#" class="hover:text-primary">E-Books</a></li>
-              <li><a href="/contact" class="hover:text-primary">Contact</a></li>
-            </ul>
-            <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
-          </nav>
-          <section class="relative">
-              <img src="static/file.jpg" alt="Healthy meal" class="w-full h-64 object-cover">
-              <div class="absolute inset-0 flex items-center justify-center">
-              </div>
-            </section>  
-          <!-- white container between img and text, also space for flash msgs-->
-          <section class="py-muted py-8">
-              <div class="container mx-auto text-center">
-                  <!-- Flash messages -->
-                  {% with messages = get_flashed_messages(with_categories=true) %}
-                  {% if messages %}
-                      {% for category, message in messages %}
-                          <div class="alert alert-{{ category }}">
-                              {{ message }}
-                          </div>
-                      {% endfor %}
-                  {% endif %}
-              {% endwith %}
-              </div>
-          </section>   
+        
         <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
             {% if alternative_dietplans %}
                 <div class="flex-shrink-0 mb-6 md:mb-0">
