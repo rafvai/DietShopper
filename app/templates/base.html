@@ -133,21 +133,49 @@
 </head>
 
 <body>
-    <div class="container">
-
-        <!-- Navigation Links -->
-        <nav style="position: fixed; top: 0; left: 0; height: 100vh; width: 200px; background-color: #f8f9fa; display: flex; flex-direction: column; justify-content: space-between; padding: 20px;">
-            <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 20px;">{{ username }}</div>
-            <ul style="list-style-type: none; padding: 0; flex-grow: 1;">
-                <li style="margin: 10px 0;"><a href="/about" style="text-decoration: none; color: #000;">About</a></li>
-                <li style="margin: 10px 0;"><a href="#" style="text-decoration: none; color: #000;">Services</a></li>
-                <li style="margin: 10px 0;"><a href="#" style="text-decoration: none; color: #000;">Blog</a></li>
-                <li style="margin: 10px 0;"><a href="#" style="text-decoration: none; color: #000;">Course</a></li>
-                <li style="margin: 10px 0;"><a href="#" style="text-decoration: none; color: #000;">E-Books</a></li>
-                <li style="margin: 10px 0;"><a href="/contact" style="text-decoration: none; color: #000;">Contact</a></li>
-            </ul>
-            <button class="bg-primary text-primary-foreground px-4 py-2 rounded">Book a Free Consult</button>
-        </nav>
+    <div class="nav.link container">
+		<!-- Navigation Links -->
+		<nav style="position: fixed; top: 0; left: 0; height: 100vh; width: 125px; background-color: #000; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+			<div style="font-size: 1.5em; font-weight: bold; margin-bottom: 20px; text-align: center;"></div>
+			<ul style="list-style-type: none; padding: 0; width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; flex-grow: 1;">
+				<li style="margin: 10px 0; width: 100%;">
+					<a href="/diet-plan" style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
+						<img src="static/meals.png" alt="Meals Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+						Meals
+					</a>
+				</li>
+				<li style="margin: 10px 0; width: 100%;">
+					<a href="/exercise"style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
+						<img src="static/exercise.png" alt="Exercise Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+						Exercise
+					</a>
+				</li>
+				<li style="margin: 10px 0; width: 100%;">
+					<a href="/measurements"style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
+						<img src="static/measurements.png" alt="measurements Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+						Progress
+					</a>
+				</li>
+			</ul>
+			<button class="bg-primary text-primary-foreground px-3 py-1 rounded" style="color: #000; background-color: #f8f9fa;">Book Consult</button>
+		</nav>
+	
+		
+				<!-- Flash messages -->
+				{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					<section class="bg-muted py-8">
+						<div class="container mx-auto text-center">
+						{% for category, message in messages %}
+							<div class="alert alert-{{ category }}">
+								{{ message }}
+							</div>
+						{% endfor %}
+						</div>
+					</section>
+				{% endif %}
+				{% endwith %}
+			
 
         <!-- Content Block -->
         {% block content %}{% endblock %}
