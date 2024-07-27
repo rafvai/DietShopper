@@ -48,7 +48,7 @@
         {% endif %}
     </div>
     {% if diet_plan_info %}
-        <section class="bg-muted py-8">
+        <section class="bg-muted py-8 rounded-2xl shadow">
             <div class="container mx-auto text-center">
             <h2 class="text-2xl font-bold">{{ diet_plan_info.name.capitalize() }}</h2>
             <p class="text-muted-foreground">{{ diet_plan_info.description }}</p>
@@ -83,10 +83,14 @@
                     {% endfor %}
                 </div>
             </section>
+            <!-- Section for the get shopping list function-->
+            <div class="container mx-auto text-center">
+                <a href="/shopping-list/{{ dietPlan_id }}" class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg transition-colors duration-300 text-center">
+                    <img src="/static/shopping-cart.png" alt="Shopping Cart Icon" class="inline w-6 h-6 mr-2">
+                    SHOPPING LIST
+                </a>
+            </div>          
         {% endif %}
-    </div>
-    
-    
-    
+    </div>  
 	</body>
 {% endblock %}

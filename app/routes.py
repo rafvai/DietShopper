@@ -302,7 +302,7 @@ def diet_plan():
                 day_totals[day_name] += 1  # Increment the count of food items for the day
 
             # pass them to front end
-            return render_template("diet_plan.html", assigned_meals=output, diet_plan_info=diet_plan_info, day_totals=day_totals)
+            return render_template("diet_plan.html", assigned_meals=output, diet_plan_info=diet_plan_info, day_totals=day_totals, dietPlan_id = dietPlan_id)
         
         flash("Error retrieving the diet plan", "error")
     
