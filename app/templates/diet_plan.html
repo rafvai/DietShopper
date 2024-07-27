@@ -18,7 +18,7 @@
                             <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
                         {% endfor %}
                     </select>
-                    <button type="submit" style="margin-top: 10px; background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Select</button>
+                    <button type="submit" class="mt-6 px-6 py-2 border-2 border-blue-500 text-blue-500 text-xl hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Select</button>
                 </form>
             </div>
         </div>
@@ -57,11 +57,13 @@
 	{% endif %}
     <div>
         {% if assigned_meals %}
-            {% for day, meal_type in assigned_meals.items() %}
-                <section class="py-8">
-                    <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-card p-4 rounded shadow">
-                            <h2 class="text-xl font-bold mt-4">{{ day }}</h2>
+            <section class="py-8">
+                <!-- Container for grid layout -->
+                <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% for day, meal_type in assigned_meals.items() %}
+                        <!-- Grid item for each day -->
+                        <div class="bg-card p-4 rounded-2xl shadow">
+                            <h2 class="text-xl font-bold mt-4 text-center">{{ day }}</h2>
     
                             {% set total_items = day_totals[day] %}
     
@@ -78,10 +80,13 @@
                                 </div>
                             {% endfor %}
                         </div>
-                    </div>
-                </section>
-            {% endfor %}
+                    {% endfor %}
+                </div>
+            </section>
         {% endif %}
     </div>
+    
+    
+    
 	</body>
 {% endblock %}
