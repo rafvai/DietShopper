@@ -27,36 +27,34 @@
                     </div>
                 {% endif %}
 
-                <div class="bg-card p-4 rounded-2xl shadow" style="width: 100%; max-width: 900px; margin: 0 auto;">
-                    <!-- Display diet plan info -->
-                    {% if diet_info %}
+                 <!-- Display diet plan info -->
+                {% if diet_info %}
+                    <div class="bg-card p-4 rounded-2xl shadow" style="width: 100%; max-width: 900px; margin: 0 auto;">
                         <div class="text-center">
                             <h2 class="text-2xl font-bold ">{{ diet_info.name.capitalize() }}</h2>
                             <p class="text-muted-foreground">{{ diet_info.description }}</p>
                             <p class="text-muted-foreground">{{ diet_info.created_at }}</p>
-                        </div>
-                    {% endif %}
-                        
-                    {% if items %}
-                        <table class="shopping-list" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                            <thead>
-                                <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
-                                    <th style="padding: 10px; text-align: left; border-right: 1px solid #ddd;">Food</th>
-                                    <th style="padding: 10px; text-align: left;">Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for name, quantity in items.items() %}
-                                    <tr style="border-bottom: 1px solid #ddd;">
-                                        <td style="padding: 10px;"><a href="{{ url_for('main.food_details', food_name=name) }}" style="color: #007BFF; text-decoration: none;">{{ name }}</a></td>
-                                        <td style="padding: 10px;">{{ quantity }} gr</td>
+                        </div>                        
+                        {% if items %}
+                            <table class="shopping-list" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                                <thead>
+                                    <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+                                        <th style="padding: 10px; text-align: left; border-right: 1px solid #ddd;">Food</th>
+                                        <th style="padding: 10px; text-align: left;">Quantity</th>
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-                </div>
-                
+                                </thead>
+                                <tbody>
+                                    {% for name, quantity in items.items() %}
+                                        <tr style="border-bottom: 1px solid #ddd;">
+                                            <td style="padding: 10px;"><a href="{{ url_for('main.food_details', food_name=name) }}" style="color: #007BFF; text-decoration: none;">{{ name }}</a></td>
+                                            <td style="padding: 10px;">{{ quantity }} gr</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
             
