@@ -140,29 +140,30 @@
 			<ul style="list-style-type: none; padding: 0; width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; flex-grow: 1;">
 				<li style="margin: 5px 0 60px; width: 100%;">
 					<a href="/" style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
-						<img src="static/logo.png" alt="Logo Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+						<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
 					</a>
 				</li>
 				<li style="margin: 10px 0; width: 100%;">
 					<a href="/diet-plan" style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
-						<img src="static/meals.png" alt="Meals Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+						<img src="{{ url_for('static', filename='meals.png') }}" alt="Meals Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
 						Meals
 					</a>
 				</li>
 				<li style="margin: 10px 0; width: 100%;">
-					<a href="/exercise"style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
-						<img src="static/exercise.png" alt="Exercise Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+					<a href="/exercise" style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
+						<img src="{{ url_for('static', filename='exercise.png') }}" alt="Exercise Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
 						Exercise
 					</a>
 				</li>
 				<li style="margin: 10px 0; width: 100%;">
-					<a href="/measurements"style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
-						<img src="static/measurements.png" alt="measurements Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
+					<a href="/measurements" style="text-decoration: none; color: #f8f9fa; display: flex; flex-direction: column; align-items: center;">
+						<img src="{{ url_for('static', filename='measurements.png') }}" alt="Measurements Icon" style="width: 40px; height: 40px; margin-bottom: 5px;">
 						Progress
 					</a>
 				</li>
 			</ul>
 		</nav>
+
 	
 		
 				<!-- Flash messages -->

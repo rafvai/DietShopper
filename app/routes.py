@@ -330,7 +330,6 @@ def add_diet():
 
         return render_template("add_diet.html", days=days, meals=meals, foods=foods)
 
-    
     elif request.method == "POST":
         # Retrieve diet plan details
         diet_name = request.form.get("dietName")
@@ -367,6 +366,7 @@ def add_diet():
         flash(f"Invalid input: {e.description}", "error")
         return redirect(url_for('main.add_diet'))
     
+
 @main.route("/remove-diet", methods=['GET', 'POST'])
 @login_required
 def remove_diet():
@@ -409,6 +409,7 @@ def remove_diet():
             flash(f"An error occurred while deleting diet plans: {str(e)}","error")
 
     return redirect(url_for('main.diet_plan'))
+
 
 @main.route("/add-food", methods=['GET', 'POST'])
 @login_required
@@ -467,6 +468,7 @@ def add_food():
         flash("The food has been added succesfully!", "success")
 
         return redirect(url_for('main.add_food'))  
+
 
 @main.route("/measurements", methods=['GET', 'POST'])
 @login_required
