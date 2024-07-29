@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Diet Plans{% endblock %}
 {% block content %}
-  <body>
-    <div style="margin-left: 220px; padding: 20px;"> 
+<body class="min-h-screen flex items-center justify-center bg-white" style="margin-left: 100px;">
+    <div style="padding: 20px;"> 
         <div style="margin-left: 100px; padding: 20px; display: flex; width: calc(100% - 220px);">
             {% if alternative_dietplans %}
             <div style="flex: 1; padding: 0px; display: flex; justify-content: center; align-items: center; width: calc(50% - 110px);">
-                <img src="static/dietplan.jpg" alt="Person pouring a drink" style="border-radius: 10px; width: 100%; height: 600px; object-fit: cover;">
+                <img src="static/dietplan.jpg" alt="Person pouring a drink" style="border-radius: 10px; width: 100%; height: 500px; object-fit: cover;">
             </div>                       
             <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <h2 style="font-size: 2em; font-weight: 600; margin-bottom: 20px;">Display Diet Plan</h2>

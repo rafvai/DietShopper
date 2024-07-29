@@ -470,7 +470,7 @@ def measurements():
 
     elif request.method == "POST":
         # Retrieve past measurements to ensure it is always available for rendering
-        past_measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
+        measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
 
         if 'compare' in request.form:
             # User wants to compare with another measurement
@@ -520,7 +520,7 @@ def measurements():
                                    display_measurement_1=display_measurement_1, 
                                    display_measurement_2=display_measurement_2,
                                    display_difference=display_difference,
-                                   past_measurements=past_measurements)
+                                   measurements=measurements)
 
         else:
             # User wants to view a single measurement
@@ -545,7 +545,7 @@ def measurements():
 
             return render_template("measurements.html", 
                                    display_measurement=display_measurement, 
-                                   past_measurements=past_measurements,
+                                   measurements=measurements,
                                    selected_measurement_id=selected_measurement_id)
 
     return redirect(url_for('main.measurements'))

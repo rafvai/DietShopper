@@ -3,92 +3,110 @@
 {% block title %}My measurements{% endblock %}
 
 {% block content %}
-    <h2 class="text-center">MY MEASUREMENTS</h2>
-     <!-- Flash messages -->
-     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <div class="container">
-        {% if past_measurements %}
-        <form action="/measurements" method="POST">
-            <label for="selected_measurement">Check your measurement:</label>
-            <select id="selected_measurement" name="selected_measurement" required>
-                <option value="" disabled selected>Select your record</option>
-                {% for measurement in past_measurements %}
-                    <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Select</button>
-        </form>
-        {% endif %}
-
-        {% if display_measurement %}
-            <h2>Selected Measurement:</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, value in display_measurement.items() %}
-                    <tr>
-                        <td>{{ key }}</td>
-                        <td>{{ value }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <form action="/measurements" method="POST">
-                <input type="hidden" name="selected_measurement_1" value="{{ selected_measurement_id }}">
-                <label for="selected_measurement_2">Compare with another measurement:</label>
-                <select id="selected_measurement_2" name="selected_measurement_2" required>
-                    <option value="" disabled selected>Select another record</option>
-                    {% for measurement in past_measurements %}
-                        {% if measurement.measurement_id != selected_measurement_id %}
+<body class="min-h-screen flex items-center justify-center bg-white" style="margin-left: 100px;">
+    <div style="padding: 20px;"> 
+        <!-- Show dropdown menu with all past measurements if any-->
+        <div style="margin-left: 100px; padding: 20px; display: flex; width: calc(100% - 220px);">
+            {% if past_measurements %}
+            <div style="flex: 1; padding: 0px; display: flex; justify-content: center; align-items: center; width: calc(50% - 110px);">
+                <img src="static/dietplan.jpg" alt="Person pouring a drink" style="border-radius: 10px; width: 100%; height: 500px; object-fit: cover;">
+            </div> 
+            <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h2 style="font-size: 2em; font-weight: 600; margin-bottom: 20px;">My Records</h2>
+                <form action="/measurements" method="POST">
+                    <label for="selected_measurement" style="display: none;">Check your measurement:</label>
+                    <select id="selected_measurement" name="selected_measurement" required>
+                        <option value="" disabled selected>Select your record</option>
+                        {% for measurement in past_measurements %}
                             <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button type="submit" name="compare">Compare</button>
-            </form>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="mt-6 px-3 py-1 border-2 border-blue-500 text-blue-500 text-lg hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Select</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Display the selected measurement-->
+        {% if display_measurement %}
+        <div style="display: flex; width: 100%; padding: 20px; box-sizing: border-box;">
+            <!-- Record on the left -->
+            <div class="bg-card p-4 rounded-2xl shadow" style="width: 100%; max-width: 600px; margin: 0 auto;">
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                    <h2>Selected Measurement:</h2>
+                    <table style="margin: 0 auto; margin-top: 20px;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 10px; text-align: left; border-right: 1px solid #ddd;">Attribute</th>
+                                <th style="padding: 10px; text-align: left;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in display_measurement.items() %}
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="width: 50%; padding: 10px; box-sizing: border-box;">{{ key }}</td>
+                                    <td style="width: 50%; padding: 10px; box-sizing: border-box; text-align: center;">{{ value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Form on the right -->
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+                <form action="/measurements" method="POST" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <input type="hidden" name="selected_measurement_1" value="{{ selected_measurement_id }}">
+                    <label for="selected_measurement_2" style="margin-bottom: 10px;">Compare with another measurement:</label>
+                    <select id="selected_measurement_2" name="selected_measurement_2" required style="margin-bottom: 20px;">
+                        <option value="" disabled selected>Select record</option>
+                        {% for measurement in measurements %}
+                            {% if measurement.measurement_id != selected_measurement_id %}
+                                <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit" name="compare" class="mt-6 px-3 py-1 border-2 border-blue-500 text-blue-500 text-lg hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Compare</button>
+                </form>
+            </div>
+        </div>
         {% endif %}
 
         {% if display_measurement_1 and display_measurement_2 %}
-            <h2>Comparison: {{ days_difference }} days</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>First Measurement</th>
-                        <th>Second Measurement</th>
-                        <th>Difference</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, value1 in display_measurement_1.items() %}
-                        <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value1 }}</td>
-                            <td>{{ display_measurement_2[key] }}</td>
-                            <td>{{ display_difference[key] }}</td>
+        <div class="bg-card p-4 rounded-2xl shadow" style="margin: 0 auto; margin-left: 100px; padding: 20px;">
+            <h2 style="text-align: center; width: 100%;">Comparison: {{ days_difference }} days</h2>
+            <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
+                <table style="margin: 0 auto; margin-top: 20px;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+                            <th style="padding: 10px; text-align: left; border-right: 1px solid #ddd; width: 34%;">Attribute</th>
+                            <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 22%;">First Record</th>
+                            <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 22%;">Second Record</th>
+                            <th style="padding: 10px; text-align: center; border-right: 1px solid #ddd; width: 22%;">Difference</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for key, value1 in display_measurement_1.items() %}
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="width: 34%; padding: 10px; box-sizing: border-box;">{{ key }}</td>
+                            <td style="width: 22%; padding: 10px; box-sizing: border-box; text-align: center;">{{ value1 }}</td>
+                            <td style="width: 22%; padding: 10px; box-sizing: border-box; text-align: center;">{{ display_measurement_2[key] }}</td>
+                            <td style="width: 22%; padding: 10px; box-sizing: border-box; text-align: center;">{{ display_difference[key] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% endif %}
-    </div>   
-    <div class="links">
-        <ul>
-            <li> <a href="{{ url_for('main.add_measurement') }}">Add new record</a></li>
-            <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
-        </ul>
-    </div>
+    </div>  
+    <!-- Links Container -->
+        <section class="py-8">
+            <div class="container mx-auto grid grid-cols-1 gap-6">
+                <a href="{{ url_for('main.add_measurement') }}" class="bg-card p-4 rounded shadow flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='new_record.png') }}" alt="New Record" class="w-full h-24 object-cover rounded mb-4">
+                    <h2 class="text-xl font-bold">Add new record</h2>
+                </a>
+            </div>
+        </section>
+</body>
 {% endblock %}
