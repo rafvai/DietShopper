@@ -367,48 +367,32 @@ def add_diet():
         return redirect(url_for('main.add_diet'))
     
 
-@main.route("/remove-diet", methods=['GET', 'POST'])
+@main.route("/remove-diet/<int:diet_plan_id>", methods=['GET'])
 @login_required
-def remove_diet():
+def remove_diet(diet_plan_id):
     """ Allow user to delete a diet plan """
 
     userid = session.get("user_id")
 
-    if request.method == "GET":
-        assigned_diets = DietPlans.query.filter_by(user_id=userid).all()
-        if assigned_diets:
-            return render_template("remove_diet.html", assigned_diets=assigned_diets)
-        else:
-            flash("There is no assigned diet plan for this user", "error")
+    try:
+        # get the diet plan
+        diet_plan_to_delete = DietPlans.query.filter_by(user_id=userid, dietplan_id=diet_plan_id).first()
+
+        # Check if the diet plan exists
+        if diet_plan_to_delete is None:
+            flash("Diet plan not found or invalid.", "error")
             return redirect(url_for('main.diet_plan'))
+           
+        db.session.delete(diet_plan_to_delete)
+        db.session.commit()
 
-    elif request.method == "POST":
-        delete_dietids = request.form.getlist("diet_id")
-        
-        if not delete_dietids:
-            flash("No diet plan selected for deletion", "error")
-            return redirect(url_for('main.remove_diet'))
-
-        try:
-            # get the diet plans
-            diet_plans_to_delete = [DietPlans.query.filter_by(user_id=userid, dietplan_id=int(diet_id)).first()
-                                    for diet_id in delete_dietids]
-
-            # Check if all the diet plans exist
-            if None in diet_plans_to_delete:
-                flash("Some diet plans could not be found or are invalid.", "error")
-                return redirect(url_for('main.remove_diet'))
-
-            for diet_plan in diet_plans_to_delete:
-                db.session.delete(diet_plan)
-            db.session.commit()
-
-            flash("Selected diet plans were successfully deleted.", "success")
-        except Exception as e:
-            db.session.rollback()
-            flash(f"An error occurred while deleting diet plans: {str(e)}","error")
+        flash("Selected diet plan has been successfully deleted.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"An error occurred while deleting the diet plan: {str(e)}", "error")
 
     return redirect(url_for('main.diet_plan'))
+
 
 
 @main.route("/add-food", methods=['GET', 'POST'])

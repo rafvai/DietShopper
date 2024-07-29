@@ -26,12 +26,7 @@
         <div style="display: flex; justify-content: center; flex-wrap: nowrap; gap: 20px; width: calc(100% - 220px); margin: 20px auto; max-width: 1000px;">
             <a href="/add-diet" style="text-decoration: none; color: #000; flex: 1; min-width: 200px; max-width: 200px; display: flex; align-items: center; justify-content: center; height: 60px;">
                 <div style="display: flex; justify-content: center; align-items: center; background-color: #f9f9f9; color: #000; border: 1px solid #ccc; border-radius: 5px; padding: 20px; height: 100%; width: 100%; box-sizing: border-box; text-align: center;">
-                    <span>ADD A NEW PLAN</span>
-                </div>
-            </a>
-            <a href="/remove-diet" style="text-decoration: none; color: #000; flex: 1; min-width: 200px; max-width: 200px; display: flex; align-items: center; justify-content: center; height: 60px;">
-                <div style="display: flex; justify-content: center; align-items: center; background-color: #f9f9f9; color: #000; border: 1px solid #ccc; border-radius: 5px; padding: 20px; height: 100%; width: 100%; box-sizing: border-box; text-align: center;">
-                    <span>REMOVE AN EXISTING PLAN</span>
+                    <span>ADD NEW PLAN</span>
                 </div>
             </a>
             <a href="/shopping-list" style="text-decoration: none; color: #000; flex: 1; min-width: 200px; max-width: 200px; display: flex; align-items: center; justify-content: center; height: 60px;">
@@ -41,7 +36,7 @@
             </a>
             <a href="/add-food" style="text-decoration: none; color: #000; flex: 1; min-width: 200px; max-width: 200px; display: flex; align-items: center; justify-content: center; height: 60px;">
                 <div style="display: flex; justify-content: center; align-items: center; background-color: #f9f9f9; color: #000; border: 1px solid #ccc; border-radius: 5px; padding: 20px; height: 100%; width: 100%; box-sizing: border-box; text-align: center;">
-                    <span>ADD A NEW FOOD ITEM</span>
+                    <span>ADD NEW FOOD</span>
                 </div>
             </a>
         </div>
@@ -84,12 +79,16 @@
                 </div>
             </section>
             <!-- Section for the get shopping list function-->
-            <div class="container mx-auto text-center">
-                <a href="/shopping-list/{{ dietPlan_id }}" class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg transition-colors duration-300 text-center">
+            <div class="container mx-auto text-center flex justify-center space-x-4 mt-6">
+                <a href="/shopping-list/{{ dietPlan_id }}" class="inline-block px-6 py-2 bg-blue-500 text-white rounded-lg transition-colors duration-300 text-center">
                     <img src="/static/shopping-cart.png" alt="Shopping Cart Icon" class="inline w-6 h-6 mr-2">
                     SHOPPING LIST
                 </a>
-            </div>          
+                <a href="{{ url_for('main.remove_diet', diet_plan_id=dietPlan_id) }}" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg transition-colors duration-300 text-center">
+                    <img src="/static/delete.png" alt="Delete Icon" class="inline w-6 h-6 mr-2">
+                    CANCEL DIET
+                </a>
+            </div>                  
         {% endif %}
     </div>  
 	</body>
