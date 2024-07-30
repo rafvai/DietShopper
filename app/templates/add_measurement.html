@@ -3,33 +3,24 @@
 {% block title %}Add measurement{% endblock %}
 
 {% block content %}
-    <h2 class="text-center">Measurements</h2>
-    <!-- Flash messages display -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
+<body class="min-h-screen flex items-center justify-center bg-white" style="margin-left: 100px;">
+    <div style="padding: 20px;">
+        {% if column_names %}
+            <div class="bg-card p-4 rounded-2xl shadow flex flex-col items-center max-w-lg mx-auto">
+                <h2 class="text-center mb-5"><strong>Add Record</strong></h2>
+                <form action="{{ url_for('main.add_measurement') }}" method="POST" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for column_name in column_names %}
+                        <div class="flex flex-col">
+                            <label for="{{ column_name }}" class="mb-1">{{ column_name }}</label> 
+                            <input type="number" id="{{ column_name }}" name="{{ column_name }}" step="any" placeholder="Enter value" required class="p-2 border rounded">
+                        </div>
+                    {% endfor %}
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full py-2 bg-blue-500 text-white text-lg rounded-lg transition-colors duration-300 hover:bg-blue-600">Submit</button>
                     </div>
-                {% endfor %}
+                </form>
             </div>
         {% endif %}
-    {% endwith %}
-    {% if column_names %}
-        <form action="{{ url_for('main.add_measurement') }}" method="POST">
-            {% for column_name in column_names %}
-                <label for="{{ column_name }}"> {{ column_name }}</label> 
-                <input type="number" id="{{ column_name }}" name="{{ column_name }}" step="any"placeholder="Enter value" required>
-                <br>
-            {% endfor %}
-            <button type="submit">Submit</button>
-        </form>
-    {% endif %}
-    <div class="links">
-        <ul>
-            <li><a href="{{ url_for('main.measurements') }}">Diet Plans</a></li>
-            <li><a href="{{ url_for('main.index') }}">Back to Home</a></li>
-        </ul>        
     </div>
+</body>
 {% endblock %}

@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Shopping List{% endblock %}
 {% block content %}
-    <body> 
-        <div style="margin-left: 220px; padding: 20px;">
-            <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
+<body class="min-h-screen flex items-center justify-center bg-white" style="margin-left: 100px;">
+    <div style="padding: 20px;"> 
+        <div style="margin-left: 100px; padding: 20px; display: flex; width: calc(100% - 220px);">
                 {% if alternative_dietplans %}
-                    <div class="flex-shrink-0 mb-6 md:mb-0">
-                        <img class="rounded-full w-60 h-60 object-cover" src="static/dietplan.jpg" alt="Person pouring a drink">
+                    <div class="flex-shrink-0 mb-6 md:mb-0" style="flex: 1; padding: 0px; display: flex; justify-content: center; align-items: center; width: calc(50% - 110px);">
+                        <img src="static/eating.png" alt="Person pouring a drink" style="border-radius: 10px; width: 100%; height: 500px; object-fit: cover;">
                     </div>
-                    <div class="flex flex-col items-center md:items-start md:flex-row md:space-x-10">
+                    <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                         <div class="text-center md:text-left mb-6 md:mb-0">
-                            <h2 class="text-2xl font-semibold mb-4">Get Shopping List</h2>
+                            <h2 style="font-size: 2em; font-weight: 600; margin-bottom: 20px;">Get Shopping List</h2>
                             <div class="mb-4">
                                 <form id="dietPlanForm" method="GET" onsubmit="return redirectToDietPlan()">
-                                    <label for="dietPlan">Get Shopping List:</label>
+                                    <label for="dietPlan" style="display: none;">Get Shopping List:</label>
                                     <select id="dietPlan" name="dietPlan" required>
                                         <option value="" disabled selected>Select your diet plan</option>
                                         {% for diet_plan in alternative_dietplans %}
                                             <option value="{{ diet_plan.dietplan_id }}">{{ diet_plan.name }}</option>
                                         {% endfor %}
                                     </select>
-                                    <button type="submit" class="mt-2 bg-button text-button-foreground border border-button-border rounded p-2">Get</button>
+                                    <button type="submit" class="mt-6 px-4 py-1.5 border-2 border-blue-500 text-blue-500 text-lg hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Get</button>
                                 </form>
                             </div>
                         </div>

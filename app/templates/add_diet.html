@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Add Diet{% endblock %}
 {% block content %}
-
 <body class="min-h-screen flex items-center justify-center bg-muted" style="margin-left: 150px;">
     <!-- Insert diet plan information -->
     <section class="py-8">
@@ -36,7 +35,9 @@
                                                             </select>
                                                             <label class="ml-4">Quantity:</label>
                                                             <input type="number" class="w-20 ml-2" placeholder="Qty">
-                                                            <button type="button" class="remove-food btn btn-danger ml-2">Remove</button>
+                                                            <button type="button" class="remove-food btn btn-danger ml-2">
+                                                                <img src="static/remove.png" alt="Remove" style="width: 24px; height: 24px;">
+                                                            </button>
                                                         </div>
                                                         <div class="food-quantity-pair flex items-center mb-2">
                                                             <label for="food-{{ day.day_type_id }}-{{ meal.meal_type_id }}-0">Food:</label>
@@ -108,6 +109,15 @@
                 });
             }
 
+            // Function to handle remove button click events
+            function handleRemoveButtons() {
+                document.querySelectorAll('.remove-food').forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        this.parentElement.remove();
+                    });
+                });
+            }
+
             // Add more food input fields on button click
             document.querySelectorAll('.add-more-food').forEach(function(button) {
                 button.addEventListener('click', function() {
@@ -117,12 +127,14 @@
                 });
             });
 
-            // Remove food input fields on button click
-            document.querySelectorAll('.remove-food').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    this.parentElement.remove();
-                });
+            // Initialize remove buttons
+            handleRemoveButtons();
+
+            // Ensure that remove buttons are updated for newly added items
+            const observer = new MutationObserver(function() {
+                handleRemoveButtons();
             });
+            observer.observe(document.body, { childList: true, subtree: true });
         });
     </script>
 </body>
