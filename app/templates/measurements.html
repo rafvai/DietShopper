@@ -33,7 +33,7 @@
             <!-- Record on the left -->
             <div class="bg-card p-4 rounded-2xl shadow" style="width: 100%; max-width: 600px; margin: 0 auto;">
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
-                    <h2>Selected Measurement:</h2>
+                    <h2><strong>Selected Measurement:</strong></h2>
                     <table style="margin: 0 auto; margin-top: 20px;">
                         <thead>
                             <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
@@ -56,7 +56,7 @@
             <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
                 <form action="/measurements" method="POST" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                     <input type="hidden" name="selected_measurement_1" value="{{ selected_measurement_id }}">
-                    <label for="selected_measurement_2" style="margin-bottom: 10px;">Compare with another measurement:</label>
+                    <label for="selected_measurement_2" style="margin-bottom: 10px;"><strong>Compare with another measurement:</strong></label>
                     <select id="selected_measurement_2" name="selected_measurement_2" required style="margin-bottom: 20px;">
                         <option value="" disabled selected>Select record</option>
                         {% for measurement in measurements %}
@@ -72,8 +72,8 @@
         {% endif %}
 
         {% if display_measurement_1 and display_measurement_2 %}
-        <div class="bg-card p-4 rounded-2xl shadow" style="margin: 0 auto; margin-left: 100px; padding: 20px;">
-            <h2 style="text-align: center; width: 100%;">Comparison: {{ days_difference }} days</h2>
+        <div class="bg-card p-4 rounded-2xl shadow" style="margin: 0 auto; padding: 20px;">
+            <h1 style="text-align: center; width: 100%;"><strong> {{ days_difference }} days difference</strong></h1>
             <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
                 <table style="margin: 0 auto; margin-top: 20px;">
                     <thead>
@@ -99,14 +99,20 @@
         </div>
         {% endif %}
     </div>  
-    <!-- Links Container -->
-        <section class="py-8">
-            <div class="container mx-auto grid grid-cols-1 gap-6">
-                <a href="{{ url_for('main.add_measurement') }}" class="bg-card p-4 rounded shadow flex flex-col items-center">
-                    <img src="{{ url_for('static', filename='new_record.png') }}" alt="New Record" class="w-full h-24 object-cover rounded mb-4">
-                    <h2 class="text-xl font-bold">Add new record</h2>
-                </a>
-            </div>
-        </section>
+    {% if past_measurements %}
+        <!-- Links Container -->
+            <section class="py-8">
+                <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <a href="{{ url_for('main.add_measurement') }}" class="bg-card p-4 rounded shadow flex flex-col items-center">
+                        <img src="{{ url_for('static', filename='new_record.png') }}" alt="New Record" class="w-full h-24 object-cover rounded mb-4">
+                        <h2 class="text-xl font-bold">Add new record</h2>
+                    </a>
+                    <a href="{{ url_for('main.graphs') }}" class="bg-card p-4 rounded shadow flex flex-col items-center">
+                        <img src="{{ url_for('static', filename='graphs.png') }}" alt="Graphs" class="w-full h-24 object-cover rounded mb-4">
+                        <h2 class="text-xl font-bold">Graphs</h2>
+                    </a>
+                </div>
+            </section>
+    {% endif %}
 </body>
 {% endblock %}

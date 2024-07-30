@@ -153,7 +153,6 @@ def is_later(date1, date2):
     return False
 
 def create_food_pie_chart(food):
-    from app.models import Foods
     from sqlalchemy import inspect
     import plotly.graph_objs as go
     from . import db
@@ -174,3 +173,28 @@ def create_food_pie_chart(food):
     # Generate Plotly pie chart
     fig = go.Figure(data=[go.Pie(labels=macro_nutrients, values=values)])
     return fig
+
+def create_line_graph(values, parameter_name):
+    import plotly.express as px
+    import pandas as pd
+    
+    # Create arrays to store records and corresponding date time
+    records = []
+    dates = []
+
+    for value in values:
+        records.append(value[0])
+        dates.append(value[1]) 
+
+    # Create a DataFrame from the records and dates
+    df = pd.DataFrame({"Date": dates, "Value": records})
+
+    # Sort the DataFrame by Date
+    df = df.sort_values(by="Date")
+
+    # Create a line graph using Plotly Express
+    fig = px.line(df, x="Date", y="Value", title=f"{parameter_name.capitalize()} Progression Over Time")
+    fig.update_layout(xaxis_title="Date", yaxis_title=parameter_name.capitalize())
+
+    return fig
+

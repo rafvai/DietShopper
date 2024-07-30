@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}My measurements{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-white" style="margin-left: 100px;">
+    <div class="p-5 w-full max-w-3xl mx-auto">
+        <!-- Show the drop down menu with all parameters -->
+        {% if parameters %}
+            <div class="flex flex-col items-center">
+                <h2 class="text-2xl font-semibold mb-5">My Records</h2>
+                <form action="/graphs" method="POST" class="w-full max-w-md">
+                    <label for="selected_parameter" class="sr-only">Check your measurement:</label>
+                    <select id="selected_parameter" name="selected_parameter" required class="block w-full p-2 border rounded mb-3">
+                        <option value="" disabled selected>Select parameter</option>
+                        {% for parameter in parameters %}
+                            <option value="{{ parameter }}">{{ parameter }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="w-full py-2 bg-blue-500 text-white text-lg rounded-lg transition-colors duration-300 hover:bg-blue-600">Select</button>
+                </form>
+            </div>  
+        {% endif %}
+
+        {% if chart %}
+            <div class="mt-6">
+                {{ chart|safe }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

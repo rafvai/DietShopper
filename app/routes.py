@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 from collections import defaultdict
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
-from .helpers import create_food_pie_chart, is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
+from .helpers import create_food_pie_chart, create_line_graph, is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
 from .models import Substitutes, Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
 from . import db
 import logging
@@ -508,7 +508,7 @@ def measurements():
             difference = safeSubtract(result_2[:-1], result_1[:-1])
             
             # store the formatted column names , don't save user, measurement and date
-            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id"]]
 
             # create dicts by zipping together col names and values, exclude date in display difference
             display_measurement_1 = dict(zip(column_names, result_1))
@@ -539,7 +539,7 @@ def measurements():
                 flash("Measurement not found.", "error")
                 return redirect(url_for('main.measurements'))
 
-            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id"]]
 
             display_measurement = dict(zip(column_names, result))
 
@@ -596,3 +596,42 @@ def add_measurement():
         flash('Record added successfully!', 'success')
 
     return redirect(url_for("main.measurements"))
+
+@main.route("/graphs", methods=['GET', 'POST'])
+@login_required
+def graphs():
+    """ Allow user to see his progression graphs"""
+    userid = session['user_id']
+
+    if request.method == 'GET':
+        # Retrieve the name of the parameters from the measurement table
+        parameters = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+        if not parameters:
+            flash("An error occurred while retrieving parameter names", "error")
+            return redirect(url_for("main.measurements"))
+        # Return the page passing parameter names
+        return render_template("graphs.html", parameters=parameters)
+    
+    elif request.method == 'POST':
+        # Get the parameter that the user selected and format it
+        selected_parameter = request.form.get("selected_parameter")
+        if selected_parameter in ["Bmi", "Bmr"]:
+            formatted_parameter = selected_parameter.upper()
+        else:
+            formatted_parameter = selected_parameter.lower().replace(" ","_")
+
+        # Get all the records for the selected parameter
+        values = db.session.query(getattr(Measurement, formatted_parameter), Measurement.created_at).filter_by(user_id=userid).all()
+            
+        if not values:
+            flash("No data available for the selected parameter", "error")
+            return redirect(url_for("main.graphs"))
+        
+        graph = create_line_graph(values, selected_parameter)
+        
+        if not graph:
+            flash("An error occurred while creating the graph", "error")
+            return redirect(url_for("main.graphs"))
+        
+        chart = pio.to_html(graph, full_html=False)
+        return render_template("graphs.html", chart=chart)
