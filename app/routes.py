@@ -8,27 +8,60 @@ from collections import defaultdict
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
 from .helpers import create_food_pie_chart, create_line_graph, is_later, login_required, collect_meal_data, insert_meals_and_foods, safeSubtract, dateDifference
-from .models import Substitutes, Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
+from .models import Newsletter, Substitutes, Users, DayTypes, MealTypes, Foods, DietPlans, Meals, Measurement
 from . import db
 import logging
 import plotly.io as pio
 
-
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 main = Blueprint('main', __name__)
 
 # Define homepage
-@main.route("/", methods=['GET'])
+@main.route("/", methods=['GET', 'POST'])
 @login_required
 def index():
     """Show welcome message and options"""
 
-    userid = session["user_id"]
-    username = db.session.query(Users.username).filter(Users.user_id == userid).first()
-    if username:
-        return render_template("index.html", username=username[0])
-    else:
+    # store user id in session
+    userid = session.get("user_id")
+    # if user_id is not in session, redirect to login
+    if not userid:
+        flash("User not logged in", "error")
+        return redirect(url_for('main.login'))
+    
+    # query the database for the user's username
+    user = db.session.query(Users).filter(Users.user_id == userid).first()
+    if not user:
         flash("An error occurred while retrieving user's username", "error")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.login'))
+    
+    if request.method == 'GET':
+        return render_template("index.html", username=user.username)
+    
+    elif request.method == 'POST':
+        # store user info 
+        name = request.form.get("name")
+        email = request.form.get("email")
+        # check for potential errors
+        if not name or not email:
+            flash("Name and/or email missing", "error")
+            return redirect(url_for("main.index"))
+        
+        # create and store user inputs inside a newsletter obj   
+        new_newsletter = Newsletter(email=email, name=name)
+        # add it to db and commit
+        try:
+            db.session.add(new_newsletter)
+            db.session.commit()
+            flash("Successfully subscribed to the newsletter!", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An error occurred while adding to the newsletter: {str(e)}", "error")
+
+    return render_template("index.html", username=user.username)
+
 
 
 @main.route("/login", methods=["GET", "POST"])
@@ -104,6 +137,12 @@ def register():
 def about():
     """ render the page description of the app """
     return render_template("about.html")
+
+@main.route("/project", methods=['GET'])
+@login_required
+def project():
+    """ render the page description of the project """
+    return render_template("project.html")
 
 
 @main.route("/my-profile", methods=['GET'])
@@ -394,29 +433,32 @@ def remove_diet(diet_plan_id):
     return redirect(url_for('main.diet_plan'))
 
 
-
 @main.route("/add-food", methods=['GET', 'POST'])
 @login_required
 def add_food():
-    """ Allow user to add food inside db """
+    """Allow user to add food inside db"""
 
     if request.method == 'GET':
-        # Initialize an empty list to store column names
-        columns = []
-        # Use SQLAlchemy's inspector to get column names from the 'foods' table
-        inspector = inspect(db.engine)
-        # Retrieve all column names
-        for column_info in inspector.get_columns("Foods"): 
-            column_name = column_info['name']  # Extract the column name
-            # Skip the primary key column
-            if column_name == "food_id":
-                continue
-            else:
-                columns.append(column_name.capitalize())
-        
-        # Render the template with the column names
-        return render_template("add_food.html", columns=columns)
-
+        try:
+            # Initialize an empty list to store column names
+            columns = []
+            # Use SQLAlchemy's inspector to get column names from the 'foods' table
+            inspector = inspect(db.engine)
+            # Retrieve all column names
+            for column_info in inspector.get_columns("foods"): 
+                column_name = column_info['name']  # Extract the column name
+                # Skip the primary key column
+                if column_name == "food_id":
+                    continue
+                else:
+                    columns.append(column_name.capitalize())
+            
+            # Render the template with the column names
+            return render_template("add_food.html", columns=columns)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred while retrieving columns: {e}")
+            flash("An error occurred while retrieving food columns", "error")
+            return redirect(url_for('main.dashboard'))  # Adjust to your dashboard or home endpoint
 
     elif request.method == 'POST':
         # Retrieve user inputs
@@ -432,7 +474,7 @@ def add_food():
             return redirect(url_for('main.add_food'))
 
         try:
-            # Convert into column's accepted format
+            # Convert inputs into appropriate formats
             calories = int(calories)
             protein = float(protein)
             carbs = float(carbs)
@@ -441,197 +483,246 @@ def add_food():
             flash("All values must be of a correct format", "error")
             return redirect(url_for('main.add_food'))
 
-        # Crea una nuova istanza di Foods
-        new_food = Foods(name=name, calories=calories, protein=protein, carbs=carbs, fats=fats)
+        try:
+            # Create a new instance of Foods
+            new_food = Foods(name=name, calories=calories, protein=protein, carbs=carbs, fats=fats)
+            # Add and commit the new record to the database
+            db.session.add(new_food)
+            db.session.commit()
 
-        # Aggiungi e commit il nuovo record al database
-        db.session.add(new_food)
-        db.session.commit()
+            # Flash success message
+            flash("The food has been added successfully!", "success")
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred while adding food: {e}")
+            db.session.rollback()
+            flash("An error occurred while adding the food", "error")
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            db.session.rollback()
+            flash("An unexpected error occurred", "error")
 
-        # Flash messaggio di successo
-        flash("The food has been added succesfully!", "success")
-
-        return redirect(url_for('main.add_food'))  
-
+        return redirect(url_for('main.add_food'))
 
 @main.route("/measurements", methods=['GET', 'POST'])
 @login_required
 def measurements():
     """Allow user to watch past measurements and add new ones"""
-
-    userid = session["user_id"]
+    try:
+        userid = session["user_id"]
+    except KeyError:
+        logger.error("User ID not found in session")
+        flash("User session expired. Please log in again.", "error")
+        return redirect(url_for("auth.login"))  # Adjust to your login endpoint
 
     if request.method == "GET":
-        # Retrieve past measurements, taking only dates and ids
-        past_measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
-        if not past_measurements:
-            return render_template("measurements.html", message="You don't have any records. Please add one.")
-        return render_template("measurements.html", past_measurements=past_measurements)
+        try:
+            past_measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
+            if not past_measurements:
+                return render_template("measurements.html", message="You don't have any records. Please add one.")
+            return render_template("measurements.html", past_measurements=past_measurements)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred: {e}")
+            flash("An error occurred while retrieving past measurements", "error")
+            return redirect(url_for("main.measurements"))
 
     elif request.method == "POST":
-        # Retrieve past measurements to ensure it is always available for rendering
-        measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
+        try:
+            measurements = db.session.query(Measurement.measurement_id, Measurement.created_at).filter_by(user_id=userid).all()
 
-        if 'compare' in request.form:
-            # User wants to compare with another measurement
-            selected_measurement_id_1 = request.form.get("selected_measurement_1")
-            selected_measurement_id_2 = request.form.get("selected_measurement_2")
+            if 'compare' in request.form:
+                selected_measurement_id_1 = request.form.get("selected_measurement_1")
+                selected_measurement_id_2 = request.form.get("selected_measurement_2")
 
-            if not selected_measurement_id_1 or not selected_measurement_id_2:
-                flash("Both measurements must be selected for comparison.", "error")
-                return redirect(url_for('main.measurements'))
-            # retrieve all fields for the selected measurement, except for measurement id and user id
-            query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
-                        FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
- 
-            result_1 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_1}).fetchone()
-            result_2 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_2}).fetchone()
+                if not selected_measurement_id_1 or not selected_measurement_id_2:
+                    flash("Both measurements must be selected for comparison.", "error")
+                    return redirect(url_for('main.measurements'))
 
-            if not result_1 or not result_2:
-                flash("One or both measurements not found.", "error")
-                return redirect(url_for('main.measurements'))
-            
-            # store dates of the 2 records inside variables
-            datetime1 = result_1[-1]
-            datetime2 = result_2[-1]
-            
-            # display the most recent date after the other for comparison purpose
-            if (is_later(datetime1, datetime2)):
-                tmp = result_1
-                result_1 = result_2
-                result_2 = tmp
+                query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
+                           FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
 
-            # calculate the difference in time between the 2 records
-            days_difference = dateDifference(datetime1, datetime2)
-            
-            # calculate the difference existing between the 2 records excluding the date
-            difference = safeSubtract(result_2[:-1], result_1[:-1])
-            
-            # store the formatted column names , don't save user, measurement and date
-            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id"]]
+                result_1 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_1}).fetchone()
+                result_2 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_2}).fetchone()
 
-            # create dicts by zipping together col names and values, exclude date in display difference
-            display_measurement_1 = dict(zip(column_names, result_1))
-            display_measurement_2 = dict(zip(column_names, result_2))
-            display_difference = dict(zip(column_names, difference))
-            
-            return render_template("measurements.html", 
-                                   days_difference = days_difference,
-                                   display_measurement_1=display_measurement_1, 
-                                   display_measurement_2=display_measurement_2,
-                                   display_difference=display_difference,
-                                   measurements=measurements)
+                if not result_1 or not result_2:
+                    flash("One or both measurements not found.", "error")
+                    return redirect(url_for('main.measurements'))
 
-        else:
-            # User wants to view a single measurement
-            selected_measurement_id = request.form.get("selected_measurement")
+                datetime1 = result_1[-1]
+                datetime2 = result_2[-1]
 
-            if not selected_measurement_id:
-                flash("No measurement selected.", "error")
-                return redirect(url_for('main.measurements'))
+                if is_later(datetime1, datetime2):
+                    result_1, result_2 = result_2, result_1
 
-            query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
-                       FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
+                days_difference = dateDifference(datetime1, datetime2)
+                difference = safeSubtract(result_2[:-1], result_1[:-1])
 
-            result = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id}).fetchone()
+                column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+                display_measurement_1 = dict(zip(column_names, result_1[:-1]))
+                display_measurement_2 = dict(zip(column_names, result_2[:-1]))
+                display_difference = dict(zip(column_names, difference))
 
-            if not result:
-                flash("Measurement not found.", "error")
-                return redirect(url_for('main.measurements'))
+                return render_template("measurements.html",
+                                       days_difference=days_difference,
+                                       display_measurement_1=display_measurement_1,
+                                       display_measurement_2=display_measurement_2,
+                                       display_difference=display_difference,
+                                       measurements=measurements)
 
-            column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id"]]
+            else:
+                selected_measurement_id = request.form.get("selected_measurement")
 
-            display_measurement = dict(zip(column_names, result))
+                if not selected_measurement_id:
+                    flash("No measurement selected.", "error")
+                    return redirect(url_for('main.measurements'))
 
-            return render_template("measurements.html", 
-                                   display_measurement=display_measurement, 
-                                   measurements=measurements,
-                                   selected_measurement_id=selected_measurement_id)
+                query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
+                           FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
+
+                result = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id}).fetchone()
+
+                if not result:
+                    flash("Measurement not found.", "error")
+                    return redirect(url_for('main.measurements'))
+
+                column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+                display_measurement = dict(zip(column_names, result[:-1]))
+
+                return render_template("measurements.html",
+                                       display_measurement=display_measurement,
+                                       measurements=measurements,
+                                       selected_measurement_id=selected_measurement_id)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred: {e}")
+            flash("An error occurred while processing your request", "error")
+            return redirect(url_for('main.measurements'))
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            flash("An unexpected error occurred", "error")
+            return redirect(url_for('main.measurements'))
 
     return redirect(url_for('main.measurements'))
 
-
-@main.route("/add_measurement", methods =['GET','POST'])
+@main.route("/add_measurement", methods=['GET', 'POST'])
 @login_required
 def add_measurement():
-    """ Allow user to add a new measurement """
-    userid = session['user_id']
+    """Allow user to add a new measurement"""
+    try:
+        userid = session['user_id']
+    except KeyError:
+        logger.error("User ID not found in session")
+        flash("User session expired. Please log in again.", "error")
+        return redirect(url_for("auth.login"))  # Adjust to your login endpoint
+
     column_names = []
-
-    # retrieve and format column names
-    inspector = inspect(Measurement)
-    for column in inspector.columns:
-        if(column.name == "user_id" or column.name == "measurement_id" or column.name == "created_at"):
-            continue
-        elif(column.name == "BMI" or column.name == "BMR"):
-            column_names.append(column.name)
-        else:
-            column_names.append(column.name.replace("_", " ").capitalize())
-
-    # if request methos is get , just render column names
-    if request.method == "GET":
-        return render_template("add_measurement.html", column_names = column_names)
-    
-    # if user submits a new record
-    elif request.method == "POST":
-        # retrieve user's inputs
-        new_record = Measurement(user_id=userid)
-        
-        for name in column_names:
-            # Get the value from the form
-            value = request.form.get(name)
-            
-            # Don't format only the BMI and BMR columns
-            if name == "BMI" or name == "BMR":
-                setattr(new_record, name, value)
+    try:
+        # Retrieve and format column names
+        inspector = inspect(Measurement)
+        for column in inspector.columns:
+            if column.name in ["user_id", "measurement_id", "created_at"]:
+                continue
+            elif column.name in ["BMI", "BMR"]:
+                column_names.append(column.name)
             else:
-                formatted_name = name.replace(" ", "_").lower()
-                setattr(new_record, formatted_name, value)
-        
-        # Add the record to db
-        db.session.add(new_record)
-        db.session.commit()
+                column_names.append(column.name.replace("_", " ").capitalize())
+    except SQLAlchemyError as e:
+        logger.error(f"Database error occurred: {e}")
+        flash("An error occurred while retrieving column names", "error")
+        return redirect(url_for("main.measurements"))
 
-        # Display success message
-        flash('Record added successfully!', 'success')
+    if request.method == 'GET':
+        return render_template("add_measurement.html", column_names=column_names)
+
+    elif request.method == 'POST':
+        # Retrieve user's inputs and create a new Measurement record
+        new_record = Measurement(user_id=userid)
+        try:
+            for name in column_names:
+                value = request.form.get(name)
+                if name in ["BMI", "BMR"]:
+                    setattr(new_record, name, value)
+                else:
+                    formatted_name = name.replace(" ", "_").lower()
+                    setattr(new_record, formatted_name, value)
+
+            # Add the record to the database
+            db.session.add(new_record)
+            db.session.commit()
+
+            # Display success message
+            flash('Record added successfully!', 'success')
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred: {e}")
+            db.session.rollback()
+            flash("An error occurred while adding the record", "error")
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            db.session.rollback()
+            flash("An unexpected error occurred", "error")
 
     return redirect(url_for("main.measurements"))
 
 @main.route("/graphs", methods=['GET', 'POST'])
 @login_required
 def graphs():
-    """ Allow user to see his progression graphs"""
-    userid = session['user_id']
+    """Allow user to see his progression graphs"""
+    try:
+        userid = session['user_id']
+    except KeyError:
+        logger.error("User ID not found in session")
+        flash("User session expired. Please log in again.", "error")
+        return redirect(url_for("auth.login"))  # Adjust to your login endpoint
 
     if request.method == 'GET':
-        # Retrieve the name of the parameters from the measurement table
-        parameters = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
-        if not parameters:
+        try:
+            # Retrieve the names of the parameters from the measurement table
+            parameters = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+            if not parameters:
+                flash("An error occurred while retrieving parameter names", "error")
+                return redirect(url_for("main.measurements"))
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred: {e}")
             flash("An error occurred while retrieving parameter names", "error")
             return redirect(url_for("main.measurements"))
+
         # Return the page passing parameter names
         return render_template("graphs.html", parameters=parameters)
-    
-    elif request.method == 'POST':
-        # Get the parameter that the user selected and format it
-        selected_parameter = request.form.get("selected_parameter")
-        if selected_parameter in ["Bmi", "Bmr"]:
-            formatted_parameter = selected_parameter.upper()
-        else:
-            formatted_parameter = selected_parameter.lower().replace(" ","_")
 
-        # Get all the records for the selected parameter
-        values = db.session.query(getattr(Measurement, formatted_parameter), Measurement.created_at).filter_by(user_id=userid).all()
-            
+    elif request.method == 'POST':
+        selected_parameter = request.form.get("selected_parameter")
+        if not selected_parameter:
+            flash("Please select a parameter", "error")
+            return redirect(url_for("main.graphs"))
+
+        try:
+            # Format the selected parameter
+            if selected_parameter in ["Bmi", "Bmr"]:
+                formatted_parameter = selected_parameter.upper()
+            else:
+                formatted_parameter = selected_parameter.lower().replace(" ", "_")
+
+            # Get all the records for the selected parameter
+            values = db.session.query(getattr(Measurement, formatted_parameter), Measurement.created_at).filter_by(user_id=userid).all()
+        except SQLAlchemyError as e:
+            logger.error(f"Database error occurred: {e}")
+            flash("An error occurred while retrieving data", "error")
+            return redirect(url_for("main.graphs"))
+        except AttributeError:
+            logger.error("Selected parameter does not exist in the database")
+            flash("Invalid parameter selected", "error")
+            return redirect(url_for("main.graphs"))
+
         if not values:
             flash("No data available for the selected parameter", "error")
             return redirect(url_for("main.graphs"))
-        
-        graph = create_line_graph(values, selected_parameter)
-        
-        if not graph:
+
+        try:
+            graph = create_line_graph(values, selected_parameter)
+            if not graph:
+                raise ValueError("Graph creation failed")
+        except ValueError as e:
+            logger.error(f"Graph creation error: {e}")
             flash("An error occurred while creating the graph", "error")
             return redirect(url_for("main.graphs"))
-        
+
         chart = pio.to_html(graph, full_html=False)
         return render_template("graphs.html", chart=chart)

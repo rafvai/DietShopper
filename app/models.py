@@ -97,3 +97,9 @@ class Patients(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("Users.user_id"), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
+class Newsletter(db.Model):
+    __tablename__="Newsletter"
+
+    email = db.Column(db.String(120), primary_key=True)
+    name = db.Column(db.String(80))
+
