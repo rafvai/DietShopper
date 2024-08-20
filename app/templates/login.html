@@ -22,7 +22,7 @@
         }
         
         .container {
-            background-color: rgba(255, 255, 255, 0.98); /* Add transparency to the container background */
+            background-color:  rgba(105, 104, 104, 0.961); /* Black container background */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -57,6 +57,7 @@
         
         .form-group label {
             margin-bottom: 5px;
+            color: white; /* White text color for labels */
         }
         
         .form-group input {
@@ -116,13 +117,13 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="color: white;">
         <header class="logo">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
         </header>
         <form method="POST" action="{{ url_for('main.login') }}" class="login-form">
             <header>
-                <h1>Login</h1>
+                <h1 style="color: white;">Login</h1> 
             </header>
             <div class="form-group">
                 <label for="username">Username:</label>

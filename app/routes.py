@@ -135,14 +135,43 @@ def register():
 @main.route("/about", methods=['GET'])
 @login_required
 def about():
-    """ render the page description of the app """
-    return render_template("about.html")
+
+    # store user id in session
+    userid = session.get("user_id")
+    # if user_id is not in session, redirect to login
+    if not userid:
+        flash("User not logged in", "error")
+        return redirect(url_for('main.login'))
+    
+    # query the database for the user's username
+    user = db.session.query(Users).filter(Users.user_id == userid).first()
+    if not user:
+        flash("An error occurred while retrieving user's username", "error")
+        return redirect(url_for('main.login'))
+    
+    if request.method == 'GET':
+        """ render the page description of the app """
+        return render_template("about.html", username = user.username.capitalize())
 
 @main.route("/project", methods=['GET'])
 @login_required
 def project():
-    """ render the page description of the project """
-    return render_template("project.html")
+     # store user id in session
+    userid = session.get("user_id")
+    # if user_id is not in session, redirect to login
+    if not userid:
+        flash("User not logged in", "error")
+        return redirect(url_for('main.login'))
+    
+    # query the database for the user's username
+    user = db.session.query(Users).filter(Users.user_id == userid).first()
+    if not user:
+        flash("An error occurred while retrieving user's username", "error")
+        return redirect(url_for('main.login'))
+    
+    if request.method == 'GET':
+        """ render the page description of the project """
+        return render_template("project.html", username = user.username.capitalize())
 
 
 @main.route("/my-profile", methods=['GET'])
