@@ -1,2 +1,0 @@
-# tells heroku to run the app using the code below
-web: python run.py
