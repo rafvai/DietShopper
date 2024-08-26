@@ -15,8 +15,14 @@ def create_app():
     # Load the secret key from environment variables
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
-    # Load the database URI from environment variables, with a fallback to the SQLite database path
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///C:/Users/Raf/Desktop/DietShopper/ultimate.db')
+    # Get the database URL from environment variables, fallback to SQLite
+    database_url = os.getenv('DATABASE_URL', 'sqlite:///C:/Users/Raf/Desktop/DietShopper/ultimate.db')
+    
+    # Adjust the database URL if necessary (replace postgres:// with postgresql://)
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Set the session type
