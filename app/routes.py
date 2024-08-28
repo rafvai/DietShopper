@@ -450,15 +450,19 @@ def remove_diet(diet_plan_id):
         if diet_plan_to_delete is None:
             flash("Diet plan not found or invalid.", "error")
             return redirect(url_for('main.diet_plan'))
-           
+        
+        # retrieve the list of all meals for that dietplan id
+        Meals.query.filter_by(dietplan_id = diet_plan_id).delete(synchronize_session=False)
+            
         db.session.delete(diet_plan_to_delete)
         db.session.commit()
 
         flash("Selected diet plan has been successfully deleted.", "success")
     except Exception as e:
         db.session.rollback()
-        flash(f"An error occurred while deleting the diet plan: {str(e)}", "error")
-
+        logging.getLogger(__name__).error(f"Error deleting diet plan {diet_plan_id} for user {userid}: {e}")
+        flash("An error occurred while deleting the diet plan.", "error")
+    
     return redirect(url_for('main.diet_plan'))
 
 
