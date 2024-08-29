@@ -435,7 +435,7 @@ def add_diet():
         return redirect(url_for('main.add_diet'))
     
 
-@main.route("/remove-diet/<int:diet_plan_id>", methods=['GET'])
+@main.route("/remove-diet/<int:diet_plan_id>", methods=['POST'])
 @login_required
 def remove_diet(diet_plan_id):
     """ Allow user to delete a diet plan """
@@ -478,8 +478,8 @@ def add_food():
             # Use SQLAlchemy's inspector to get column names from the 'foods' table
             inspector = inspect(db.engine)
             # Retrieve all column names
-            for column_info in inspector.get_columns("foods"): 
-                column_name = column_info['name']  # Extract the column name
+            for column_info in inspector.get_columns("Foods"): 
+                column_name = column_info['name']  
                 # Skip the primary key column
                 if column_name == "food_id":
                     continue
@@ -491,7 +491,7 @@ def add_food():
         except SQLAlchemyError as e:
             logger.error(f"Database error occurred while retrieving columns: {e}")
             flash("An error occurred while retrieving food columns", "error")
-            return redirect(url_for('main.dashboard'))  # Adjust to your dashboard or home endpoint
+            return redirect(url_for('main.index'))  
 
     elif request.method == 'POST':
         # Retrieve user inputs
@@ -545,7 +545,7 @@ def measurements():
     except KeyError:
         logger.error("User ID not found in session")
         flash("User session expired. Please log in again.", "error")
-        return redirect(url_for("auth.login"))  # Adjust to your login endpoint
+        return redirect(url_for("main.login"))  
 
     if request.method == "GET":
         try:
@@ -569,30 +569,41 @@ def measurements():
                 if not selected_measurement_id_1 or not selected_measurement_id_2:
                     flash("Both measurements must be selected for comparison.", "error")
                     return redirect(url_for('main.measurements'))
+                
+                # retrieve the 2 selected measurements
+                measure_1 = Measurement.query.filter_by(user_id = userid, measurement_id = selected_measurement_id_1).first()
+                measure_2 = Measurement.query.filter_by(user_id = userid, measurement_id = selected_measurement_id_2).first()
 
-                query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
-                           FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
-
-                result_1 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_1}).fetchone()
-                result_2 = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id_2}).fetchone()
-
-                if not result_1 or not result_2:
+                if not measure_1 or not measure_2:
                     flash("One or both measurements not found.", "error")
                     return redirect(url_for('main.measurements'))
+                
+                # take only dates of the measurements
+                datetime1 = measure_1.created_at
+                datetime2 = measure_2.created_at
 
-                datetime1 = result_1[-1]
-                datetime2 = result_2[-1]
-
+                # check which one is later, if is later, put it as second measurement
                 if is_later(datetime1, datetime2):
-                    result_1, result_2 = result_2, result_1
+                    measure_1, measure_2 = measure_2, measure_1
 
+                # calculate days difference
                 days_difference = dateDifference(datetime1, datetime2)
-                difference = safeSubtract(result_2[:-1], result_1[:-1])
+                # calculate the changes between the 2 measures and return a measurement obj
+                difference = safeSubtract(measure_1,  measure_2)
 
-                column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
-                display_measurement_1 = dict(zip(column_names, result_1[:-1]))
-                display_measurement_2 = dict(zip(column_names, result_2[:-1]))
-                display_difference = dict(zip(column_names, difference))
+                # store the formatted names of the columns i intend to pass to frontend
+                column_names = [col.name for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+                
+                  # Create dictionaries for display
+                display_measurement_1 = {}
+                display_measurement_2 = {}
+                display_difference = {}
+
+                for column in column_names:
+                    formatted_name = column.replace("_", " ").capitalize()
+                    display_measurement_1[formatted_name] = getattr(measure_1, column)
+                    display_measurement_2[formatted_name] = getattr(measure_2, column)
+                    display_difference[formatted_name] = getattr(difference, column)
 
                 return render_template("measurements.html",
                                        days_difference=days_difference,
@@ -607,18 +618,15 @@ def measurements():
                 if not selected_measurement_id:
                     flash("No measurement selected.", "error")
                     return redirect(url_for('main.measurements'))
-
-                query = """SELECT height, weight, BMI, body_fat, fat_free_bw, subcutaneous_fat, visceral_fat, body_water, skeletal_muscle, muscle_mass, bone_mass, protein, BMR, created_at
-                           FROM Measurement WHERE user_id = :user_id AND measurement_id = :measurement_id"""
-
-                result = db.session.execute(text(query), {"user_id": userid, "measurement_id": selected_measurement_id}).fetchone()
+                
+                result = Measurement.query.filter_by(user_id=userid, measurement_id=selected_measurement_id).first()
 
                 if not result:
                     flash("Measurement not found.", "error")
                     return redirect(url_for('main.measurements'))
 
-                column_names = [col.name.replace("_", " ").capitalize() for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
-                display_measurement = dict(zip(column_names, result[:-1]))
+                column_names = [col.name for col in inspect(Measurement).columns if col.name not in ["user_id", "measurement_id", "created_at"]]
+                display_measurement = {col.replace("_", " ").capitalize(): getattr(result, col) for col in column_names}
 
                 return render_template("measurements.html",
                                        display_measurement=display_measurement,

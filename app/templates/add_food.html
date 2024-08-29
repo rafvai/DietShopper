@@ -12,8 +12,10 @@
                         <label for="{{ column }}" class="block text-left mb-2">{{ column }}</label>
                         {% if column == 'Name' %}
                             <input type="text" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }} (Brand)" required class="w-full p-2 bg-gray-200 border border-border rounded">
+                        {% elif column == 'Calories' %}
+                        <input type="numeric" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }} " required class="w-full p-2 bg-gray-200 border border-border rounded">
                         {% else %}
-                            <input type="number" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}" required class="w-full p-2 bg-gray-200 border border-border rounded">
+                            <input type="float" id="{{ column }}" name="{{ column }}" placeholder="Enter {{ column }}" required class="w-full p-2 bg-gray-200 border border-border rounded">
                         {% endif %}
                     </div>
                 {% endfor %}

@@ -117,40 +117,52 @@ def insert_meals_and_foods(meal_data):
         # Close the session if needed (depends on your app configuration)
         db.session.close()
 
-# design a method that takes 2 lists and perform the subtraction even if one or more element are None 
-def safeSubtract(y, z):
-    difference = []
-    for x in range(max(len(y), len(z))):
-        if(y[x] == None and z[x] == None):
-            k = None
-            difference.append(k)
-        elif(y[x] == None):
-            difference.append(z[x])
-        elif(z[x] == None):
-            difference.append(y[x])
+# design a method that takes 2 measurement obj and perform the subtraction even if one or more element are None and returns another measurement obj
+def safeSubtract(measurement1, measurement2):
+    from app.models import Measurement
+    from sqlalchemy import inspect
+    
+    # Create a new Measurement object to hold the differences
+    difference = Measurement()
+
+    # Get the column names for the Measurement table
+    column_names = [col.name for col in inspect(Measurement).columns]
+
+    # Perform the safe subtraction
+    for column in column_names:
+        if column not in ["user_id", "measurement_id", "created_at"]:
+            # Get the attributes of the two measurements
+            value1 = getattr(measurement1, column, None)
+            value2 = getattr(measurement2, column, None)
+
+            # Perform subtraction, handling None values
+            if value1 is None and value2 is None:
+                result = None
+            elif value1 is None:
+                result = value2
+            elif value2 is None:
+                result = value1
+            else:
+                result = round(value1 - value2, 2)
         else:
-            difference.append(round(y[x] - z[x], 2))
+            result = getattr(measurement1, column)
+
+        # Set the result to the corresponding attribute of the difference object
+        setattr(difference, column, result)
+
     return difference
 
 # Function to calculate the days of difference between two date-time strings
 def dateDifference(date1, date2):
-    # Convert strings to datetime objects, including time
-    datetime1 = datetime.strptime(date1, '%Y-%m-%d %H:%M:%S')
-    datetime2 = datetime.strptime(date2, '%Y-%m-%d %H:%M:%S')
-
     # Calculate the difference
-    difference = datetime1 - datetime2
-
+    difference = date1 - date2
     # Return the absolute difference in days
     return abs(difference.days)
 
 # define which date comes after
 def is_later(date1, date2):
-    datetime1 = datetime.strptime(date1, '%Y-%m-%d %H:%M:%S')
-    datetime2 = datetime.strptime(date2, '%Y-%m-%d %H:%M:%S')
-    if(datetime1 > datetime2):
-        return True
-    return False
+    return date1 > date2
+    
 
 def create_food_pie_chart(food):
     from sqlalchemy import inspect

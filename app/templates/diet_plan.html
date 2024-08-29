@@ -85,7 +85,7 @@
                     <img src="/static/shopping-cart.png" alt="Shopping Cart Icon" class="inline w-6 h-6 mr-2">
                     SHOPPING LIST
                 </a>
-                <a href="{{ url_for('main.remove_diet', diet_plan_id=dietPlan_id) }}" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg transition-colors duration-300 text-center">
+                <a href="{{ url_for('main.remove_diet', diet_plan_id=dietPlan_id) }}" method="POST" class="inline-block px-6 py-2 bg-red-500 text-white rounded-lg transition-colors duration-300 text-center">
                     <img src="/static/delete.png" alt="Delete Icon" class="inline w-6 h-6 mr-2">
                     CANCEL DIET
                 </a>
