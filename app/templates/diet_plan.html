@@ -20,6 +20,11 @@
                         </select>
                         <button type="submit" class="mt-6 px-6 py-2 border-2 border-blue-500 text-blue-500 text-xl hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Select</button>
                     </form>
+                {% else %}
+                    <div style="font-size: 2em; font-weight: 600; margin-bottom: 20px; text-align: center;">
+                        <div>No assigned diet plans</div>
+                        <a href="/add-diet" style="font-size: 1em; font-weight: 400; text-decoration: none; color: #007bff; display: block; margin-top: 10px;">Please add one</a>
+                    </div>
                 {% endif %}
             </div>
         </div>

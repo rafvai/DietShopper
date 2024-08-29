@@ -185,7 +185,9 @@ def my_profile():
     current_user = Users.query.filter_by(user_id=userid).first()
 
     if current_user:
-        return render_template("my_profile.html", username=current_user.username, email=current_user.email, created=current_user.created_at)
+        # Format the creation date
+        created_at = current_user.created_at.strftime('%Y-%m-%d')
+        return render_template("my_profile.html", username=current_user.username, email=current_user.email, created=created_at)
     else:
         flash("User not found", "error")
         return redirect(url_for('main.index'))

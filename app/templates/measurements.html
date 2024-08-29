@@ -7,24 +7,29 @@
     <div style="padding: 20px;"> 
         <!-- Show dropdown menu with all past measurements if any-->
         <div style="margin-left: 100px; padding: 20px; display: flex; width: calc(100% - 220px);">
-            {% if past_measurements %}
             <div style="flex: 1; padding: 0px; display: flex; justify-content: center; align-items: center; width: calc(50% - 110px);">
                 <img src="static/analytic.png" alt="Analytic" style="border-radius: 10px; width: 100%; height: 500px; object-fit: cover;">
             </div> 
             <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                <h2 style="font-size: 2em; font-weight: 600; margin-bottom: 20px;">My Records</h2>
-                <form action="/measurements" method="POST">
-                    <label for="selected_measurement" style="display: none;">Check your measurement:</label>
-                    <select id="selected_measurement" name="selected_measurement" required>
-                        <option value="" disabled selected>Select your record</option>
-                        {% for measurement in past_measurements %}
-                            <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="mt-6 px-3 py-1 border-2 border-blue-500 text-blue-500 text-lg hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Select</button>
-                </form>
+                {% if past_measurements %}
+                    <h2 style="font-size: 2em; font-weight: 600; margin-bottom: 20px;">My Records</h2>
+                    <form action="/measurements" method="POST">
+                        <label for="selected_measurement" style="display: none;">Check your measurement:</label>
+                        <select id="selected_measurement" name="selected_measurement" required>
+                            <option value="" disabled selected>Select your record</option>
+                            {% for measurement in past_measurements %}
+                                <option value="{{ measurement.measurement_id }}">{{ measurement.created_at }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="mt-6 px-3 py-1 border-2 border-blue-500 text-blue-500 text-lg hover:bg-blue-500 hover:text-white rounded-lg transition-colors duration-300">Select</button>
+                    </form>
+                {% else %}
+                    <div style="font-size: 2em; font-weight: 600; margin-bottom: 20px; text-align: center;">
+                        <div>No Records for this user</div>
+                        <a href="{{ url_for('main.add_measurement') }}" style="font-size: 1em; font-weight: 400; text-decoration: none; color: #007bff; display: block; margin-top: 10px;">Please add one</a>
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         
         <!-- Display the selected measurement-->
@@ -69,9 +74,8 @@
                 </form>
             </div>
         </div>
-        {% endif %}
 
-        {% if display_measurement_1 and display_measurement_2 %}
+        {% elif display_measurement_1 and display_measurement_2 %}
         <div class="bg-card p-4 rounded-2xl shadow" style="margin: 0 auto; padding: 20px;">
             <h1 style="text-align: center; width: 100%;"><strong> {{ days_difference }} days difference</strong></h1>
             <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-10 p-6">
@@ -97,9 +101,8 @@
                 </table>
             </div>
         </div>
-        {% endif %}
+        {% else %}
     </div>  
-    {% if past_measurements %}
         <!-- Links Container -->
             <section class="py-8">
                 <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -113,6 +116,6 @@
                     </a>
                 </div>
             </section>
-    {% endif %}
+        {% endif %}
 </body>
 {% endblock %}
